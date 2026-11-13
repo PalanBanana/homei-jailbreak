@@ -37,11 +37,21 @@ public struct ProfileError: Error, Equatable, CustomStringConvertible, Sendable 
     public var description: String { "invalid \(field): \(reason)" }
 }
 
-private struct AnyKey: CodingKey {
+struct AnyKey: CodingKey {
     var stringValue: String
     var intValue: Int? { nil }
     init?(stringValue: String) { self.stringValue = stringValue }
     init?(intValue: Int) { return nil }
+}
+
+/// Reject any key that is not in `allowed`. Mirrors the Rust `deny_unknown_fields` behaviour so
+/// identifiers or other extra fields cannot be smuggled in through data files.
+func rejectUnknownKeys(_ decoder: Decoder, allowed: [String]) throws {
+    let any = try decoder.container(keyedBy: AnyKey.self)
+    let ok = Set(allowed)
+    for key in any.allKeys where !ok.contains(key.stringValue) {
+        throw DecodingError.dataCorruptedError(forKey: key, in: any, debugDescription: "unknown field \(key.stringValue)")
+    }
 }
 
 /// The six permitted metadata fields plus provenance. Unknown keys are rejected on decode so
@@ -69,11 +79,7 @@ public struct DeviceProfile: Codable, Equatable, Sendable {
     }
 
     public init(from decoder: Decoder) throws {
-        let any = try decoder.container(keyedBy: AnyKey.self)
-        let allowed = Set(CodingKeys.allCases.map { $0.rawValue })
-        for key in any.allKeys where !allowed.contains(key.stringValue) {
-            throw DecodingError.dataCorruptedError(forKey: key, in: any, debugDescription: "unknown field \(key.stringValue)")
-        }
+        try rejectUnknownKeys(decoder, allowed: CodingKeys.allCases.map { $0.rawValue })
         let c = try decoder.container(keyedBy: CodingKeys.self)
         productType = try c.decode(String.self, forKey: .productType)
         productVersion = try c.decode(String.self, forKey: .productVersion)
@@ -87,12 +93,12 @@ public struct DeviceProfile: Codable, Equatable, Sendable {
     public var socFamily: SocFamily? { SocFamily.from(productType: productType) }
 
     public func validate() throws {
-        try Self.require(productType, "product_type", #"^[A-Za-z]+[0-9]{1,3},[0-9]{1,3}$"#)
-        try Self.require(productVersion, "product_version", #"^[0-9]{1,3}(\.[0-9]{1,3}){1,2}$"#)
-        try Self.require(buildVersion, "build_version", #"^[0-9]{1,3}[A-Z][0-9]{1,5}[a-z]?$"#)
+        try Self.require(productType, "product_type", #"^[A-Za-z]+[0-9]{1,3},[0-9]{1,3}\z"#)
+        try Self.require(productVersion, "product_version", #"^[0-9]{1,3}(\.[0-9]{1,3}){1,2}\z"#)
+        try Self.require(buildVersion, "build_version", #"^[0-9]{1,3}[A-Z][0-9]{1,5}[a-z]?\z"#)
         for (name, value) in [("device_class", deviceClass), ("hardware_model", hardwareModel), ("cpu_architecture", cpuArchitecture)] {
             if let v = value {
-                try Self.require(v, name, #"^[A-Za-z0-9,._-]{1,32}$"#)
+                try Self.require(v, name, #"^[A-Za-z0-9,._-]{1,32}\z"#)
                 if looksLikeIdentifier(v) { throw ProfileError(field: name, reason: "identifier-like value") }
             }
         }
@@ -108,12 +114,14 @@ public struct DeviceProfile: Codable, Equatable, Sendable {
 /// Heuristic for values that look like device or account identifiers. Errs toward rejecting.
 public func looksLikeIdentifier(_ s: String) -> Bool {
     let hex = Set("0123456789abcdefABCDEF")
-    let only40Hex = s.count == 40 && s.allSatisfy { hex.contains($0) }
+    // Lengths are UTF-8 byte counts, as in the Rust core, so both implementations agree on non-ASCII text.
+    let byteCount = s.utf8.count
+    let only40Hex = byteCount == 40 && s.allSatisfy { hex.contains($0) }
     let chars = Array(s)
-    let udidShape = chars.count == 25 && chars[8] == "-" && chars.filter { $0 != "-" }.allSatisfy { hex.contains($0) }
+    let udidShape = byteCount == 25 && chars.count == 25 && chars[8] == "-" && chars.filter { $0 != "-" }.allSatisfy { hex.contains($0) }
     var run = 0, longest = 0
     for ch in chars {
         if ch.isASCII && ch.isNumber { run += 1; longest = max(longest, run) } else { run = 0 }
     }
-    return only40Hex || udidShape || longest >= 14 || chars.count > 32
+    return only40Hex || udidShape || longest >= 14 || byteCount > 32
 }

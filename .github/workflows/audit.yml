@@ -1,0 +1,36 @@
+name: audit
+
+# Dependency security for the Rust workspace: RustSec advisories (cargo-audit) and licence, source
+# and ban policy (cargo-deny, see deny.toml). Tool versions are pinned. Dependency versions in
+# Cargo.lock are never changed by this workflow.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install audit tools (pinned versions)
+        run: |
+          cargo install --locked cargo-audit --version 0.23.0
+          cargo install --locked cargo-deny --version 0.20.2
+
+      - name: Check for known vulnerabilities
+        run: cargo audit --deny warnings
+
+      - name: Check licences, sources and bans
+        run: cargo deny --locked check

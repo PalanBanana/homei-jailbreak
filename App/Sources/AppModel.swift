@@ -11,15 +11,16 @@ final class AppModel: ObservableObject {
     let loadError: String?
 
     init() {
+        var loadedStore: DataStore?
+        var failure: String?
         do {
-            store = try DataStore.bundled()
-            catalog = try? PackageCatalog.bundled()
-            loadError = nil
+            loadedStore = try DataStore.bundled()
         } catch {
-            store = nil
-            catalog = nil
-            loadError = "\(error)"
+            failure = "\(error)"
         }
+        store = loadedStore
+        catalog = loadedStore == nil ? nil : try? PackageCatalog.bundled()
+        loadError = failure
     }
 
     var fixture: Fixture? { store?.fixtures.first { $0.id == selectedFixtureID } ?? store?.fixtures.first }

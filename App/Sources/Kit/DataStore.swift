@@ -4,12 +4,31 @@ public struct Fixture: Codable, Equatable, Identifiable, Sendable {
     public var id: String
     public var label: String
     public var profile: DeviceProfile
+
+    enum CodingKeys: String, CodingKey { case id, label, profile }
+
+    public init(from decoder: Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: ["id", "label", "profile"])
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        label = try c.decode(String.self, forKey: .label)
+        profile = try c.decode(DeviceProfile.self, forKey: .profile)
+    }
+}
+
+/// Closed vocabulary. There is deliberately no "exploitable" state.
+public enum FindingStatus: String, Codable, Sendable {
+    case verified
+    case partiallyVerified = "partially_verified"
+    case unverified
+    case notEstablished = "not_established"
+    case contradicted
 }
 
 public struct Finding: Codable, Equatable, Identifiable, Sendable {
     public var id: String
     public var title: String
-    public var status: String
+    public var status: FindingStatus
     public var evidenceIds: [String]
     public var cveIds: [String]
     public var hardwareScope: String
@@ -21,6 +40,22 @@ public struct Finding: Codable, Equatable, Identifiable, Sendable {
         case id, title, status, confidence
         case evidenceIds = "evidence_ids", cveIds = "cve_ids", hardwareScope = "hardware_scope"
         case firmwareScope = "firmware_scope", trackerClaimId = "tracker_claim_id", lastChecked = "last_checked"
+    }
+
+    public init(from decoder: Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: ["id", "title", "status", "evidence_ids", "cve_ids", "hardware_scope",
+                                                 "firmware_scope", "tracker_claim_id", "last_checked", "confidence"])
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        title = try c.decode(String.self, forKey: .title)
+        status = try c.decode(FindingStatus.self, forKey: .status)
+        evidenceIds = try c.decode([String].self, forKey: .evidenceIds)
+        cveIds = try c.decode([String].self, forKey: .cveIds)
+        hardwareScope = try c.decode(String.self, forKey: .hardwareScope)
+        firmwareScope = try c.decode(String.self, forKey: .firmwareScope)
+        trackerClaimId = try c.decode(String.self, forKey: .trackerClaimId)
+        lastChecked = try c.decode(String.self, forKey: .lastChecked)
+        confidence = try c.decode(String.self, forKey: .confidence)
     }
 }
 

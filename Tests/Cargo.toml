@@ -12,6 +12,7 @@ homei-core.workspace = true
 homei-catalog.workspace = true
 homei-bootstrap.workspace = true
 serde_json.workspace = true
+serde.workspace = true
 
 [[test]]
 name = "unit_device_profile"
@@ -24,6 +25,10 @@ path = "UnitTests/safety_recovery.rs"
 [[test]]
 name = "compatibility_engine"
 path = "CompatibilityTests/engine.rs"
+
+[[test]]
+name = "parity_vectors"
+path = "CompatibilityTests/parity.rs"
 
 [[test]]
 name = "safety_gates"

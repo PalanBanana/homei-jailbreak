@@ -17,6 +17,7 @@ struct DeviceInfoView: View {
                     InfoRow(labelKey: "field.cpu_architecture", value: p.cpuArchitecture ?? String(localized: "state.not_provided"))
                 }
                 Text("device.fields_note").font(.footnote).foregroundStyle(Theme.textSecondary)
+                DataKindsLegend()
             }
         }
     }

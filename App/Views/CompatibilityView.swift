@@ -7,6 +7,7 @@ struct CompatibilityView: View {
     var body: some View {
         Screen(titleKey: "compat.title") {
             if let d = model.decision, let store = model.store {
+                ProvenanceBanner(provenance: d.provenance)
                 StatusBadge(status: d.status)
                 ResearchOnlyNotice()
                 SectionCard(titleKey: "compat.explanation") {

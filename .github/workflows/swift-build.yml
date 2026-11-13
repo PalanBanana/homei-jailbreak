@@ -1,0 +1,90 @@
+name: swift-build
+
+# Compiles and tests the Swift code on a GitHub-hosted macOS runner, then builds the iOS Simulator
+# target with code signing disabled. It never targets a physical device, needs no signing identity,
+# and uploads no IPA or other build product.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: swift-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swift:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Record toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          xcrun swift --version
+          echo "iOS Simulator SDK: $(xcrun --sdk iphonesimulator --show-sdk-version) ($(xcrun --sdk iphonesimulator --show-sdk-path))"
+          xcodebuild -showsdks | grep -i simulator || true
+
+      - name: Swift package tests (HomeiKit, including Rust/Swift parity vectors)
+        run: swift test --package-path .
+
+      - name: Install XcodeGen if it is not already available
+        run: |
+          if ! command -v xcodegen >/dev/null 2>&1; then
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: Generate the Xcode project
+        run: xcodegen generate --spec App/project.yml
+
+      - name: Inspect the generated project
+        run: |
+          ls -d App/*.xcodeproj
+          xcodebuild -list -project App/HOMEI.xcodeproj
+
+      - name: Build the HOMEI iOS Simulator target (code signing disabled)
+        run: |
+          set -o pipefail
+          SCHEME="$(xcodebuild -list -project App/HOMEI.xcodeproj -json | python3 -c 'import json,sys; s=json.load(sys.stdin)["project"]["schemes"]; print("HOMEI" if "HOMEI" in s else "")')"
+          if [ -z "$SCHEME" ]; then echo "No HOMEI scheme was generated"; exit 1; fi
+          echo "Building scheme: $SCHEME"
+          xcodebuild build \
+            -project App/HOMEI.xcodeproj \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build.log
+
+      - name: Summarise compiler warnings
+        if: always()
+        run: |
+          if [ -f build.log ]; then
+            echo "Warnings: $(grep -c ' warning: ' build.log || true)"
+            grep ' warning: ' build.log | sort -u | head -60 || true
+          fi
+
+      - name: Check the built app bundle
+        run: |
+          APP="build/DerivedData/Build/Products/Debug-iphonesimulator/HOMEI.app"
+          test -d "$APP"
+          echo "--- bundle contents"; ls "$APP"
+          for f in evidence compatibility research-index device-fixtures catalog; do
+            test -f "$APP/$f.json" || { echo "missing bundled $f.json"; exit 1; }
+          done
+          test -d "$APP/en.lproj" && test -d "$APP/ko.lproj"
+          test -f "$APP/Assets.car"
+          echo "--- Info.plist"; plutil -p "$APP/Info.plist"
+          echo "--- no IPA produced"; ! find build -name '*.ipa' | grep -q .

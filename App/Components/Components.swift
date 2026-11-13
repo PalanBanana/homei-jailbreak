@@ -41,6 +41,7 @@ struct SectionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(LocalizedStringKey(titleKey)).font(.headline).foregroundStyle(Theme.textPrimary)
+                .accessibilityAddTraits(.isHeader)
             content
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -53,15 +54,54 @@ struct SectionCard<Content: View>: View {
 struct InfoRow: View {
     let labelKey: String
     let value: String
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(LocalizedStringKey(labelKey)).foregroundStyle(Theme.textSecondary)
-            Spacer(minLength: 12)
-            Text(value).foregroundStyle(Theme.textPrimary).multilineTextAlignment(.trailing)
+        // At accessibility text sizes the label and value stack instead of squeezing side by side.
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 2) { label; valueText }
+            } else {
+                HStack(alignment: .firstTextBaseline) {
+                    label
+                    Spacer(minLength: 12)
+                    valueText.multilineTextAlignment(.trailing)
+                }
+            }
         }
         .font(.subheadline)
         .accessibilityElement(children: .combine)
+    }
+
+    private var label: some View { Text(LocalizedStringKey(labelKey)).foregroundStyle(Theme.textSecondary) }
+    private var valueText: some View { Text(value).foregroundStyle(Theme.textPrimary) }
+}
+
+/// Says what kind of data a screen shows when it is not a profile.
+struct DataKindBanner: View {
+    let textKey: String
+    let symbol: String
+
+    var body: some View {
+        Label(LocalizedStringKey(textKey), systemImage: symbol)
+            .font(.footnote)
+            .foregroundStyle(Theme.accent)
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+/// The five kinds of information HOMEI keeps apart. Observed data is listed to say it never exists here.
+struct DataKindsLegend: View {
+    var body: some View {
+        SectionCard(titleKey: "legend.title") {
+            InfoRow(labelKey: "legend.observed", value: String(localized: "legend.observed_value"))
+            InfoRow(labelKey: "legend.user_profile", value: String(localized: "legend.user_profile_value"))
+            InfoRow(labelKey: "legend.fixture", value: String(localized: "legend.fixture_value"))
+            InfoRow(labelKey: "legend.research", value: String(localized: "legend.research_value"))
+            InfoRow(labelKey: "legend.unknown", value: String(localized: "legend.unknown_value"))
+        }
     }
 }
 

@@ -1,0 +1,31 @@
+# cargo-deny policy for the HOMEI Rust workspace. Run: cargo deny check
+# Only permissive licences are allowed, only crates.io is a source, and wildcard versions are refused.
+
+[graph]
+all-features = true
+
+[advisories]
+# Known vulnerabilities fail the check. Nothing is ignored.
+ignore = []
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Unlicense",
+    "Unicode-3.0",
+]
+confidence-threshold = 0.9
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# Workspace members depend on each other by path and are all `publish = false`. Registry dependencies
+# must still carry a version requirement.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

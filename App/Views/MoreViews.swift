@@ -6,6 +6,7 @@ struct PackageCatalogView: View {
 
     var body: some View {
         Screen(titleKey: "catalog.title") {
+            DataKindBanner(textKey: "catalog.kind_banner", symbol: "shippingbox")
             Text("catalog.metadata_only").font(.subheadline).foregroundStyle(Theme.textSecondary)
             if let catalog = model.catalog {
                 ForEach(catalog.packages) { p in
@@ -38,6 +39,7 @@ struct BootstrapStatusView: View {
     var body: some View {
         Screen(titleKey: "bootstrap.title") {
             Label("bootstrap.simulation_only", systemImage: "testtube.2").font(.headline).foregroundStyle(Theme.accent)
+            if let d = model.decision { ProvenanceBanner(provenance: d.provenance) }
             if let d = model.decision, let plan = BootstrapSimulation.plan(components, requesting: "fixture.catalog-client") {
                 SectionCard(titleKey: "bootstrap.mock_status") {
                     ForEach(BootstrapSimulation.statusLines(plan: plan, decision: d), id: \.self) {
@@ -56,15 +58,17 @@ struct DiagnosticsView: View {
         Screen(titleKey: "diagnostics.title") {
             if let store = model.store, let d = model.decision {
                 let report = DiagnosticsReport.make(store: store, decision: d)
+                ProvenanceBanner(provenance: d.provenance)
                 SectionCard(titleKey: "diagnostics.checks") {
-                    ForEach(report.checks.sorted(by: { $0.key < $1.key }), id: \.key) { key, ok in
-                        Label(key, systemImage: ok ? "checkmark.circle" : "xmark.circle")
-                            .foregroundStyle(ok ? Theme.positive : Theme.negative).font(.footnote)
+                    ForEach(report.checks.sorted(by: { $0.key < $1.key }), id: \.key) { item in
+                        Label(item.key, systemImage: item.value ? "checkmark.circle" : "xmark.circle")
+                            .foregroundStyle(item.value ? Theme.positive : Theme.negative).font(.footnote)
+                            .accessibilityLabel(Text("\(item.key): \(item.value ? "passed" : "failed")"))
                     }
                 }
                 Text("diagnostics.sanitized_note").font(.footnote).foregroundStyle(Theme.textSecondary)
                 if let json = report.export() {
-                    ShareLink("diagnostics.export", item: json)
+                    ShareLink("diagnostics.export", item: json).frame(minHeight: 44)
                 }
             }
         }
@@ -77,6 +81,7 @@ struct RecoveryView: View {
     var body: some View {
         Screen(titleKey: "recovery.title") {
             if let d = model.decision {
+                ProvenanceBanner(provenance: d.provenance)
                 let g = Recovery.goNoGo(for: d)
                 SectionCard(titleKey: "recovery.no_go") {
                     Text(g.verdict).font(.title2.bold()).foregroundStyle(Theme.negative)
@@ -107,6 +112,7 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.inline)
                 }
+                if let fixture = model.fixture { ProvenanceBanner(provenance: fixture.profile.provenance) }
             }
             Text("settings.no_background_discovery").font(.footnote).foregroundStyle(Theme.textSecondary)
             Text("settings.language_note").font(.footnote).foregroundStyle(Theme.textSecondary)

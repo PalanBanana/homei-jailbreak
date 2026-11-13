@@ -44,6 +44,14 @@ public struct EvidenceScope: Codable, Equatable, Sendable {
         case productType = "product_type", productVersion = "product_version"
         case buildVersion = "build_version", socFamily = "soc_family"
     }
+    public init(from decoder: Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: ["product_type", "product_version", "build_version", "soc_family"])
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        productType = try c.decodeIfPresent(String.self, forKey: .productType)
+        productVersion = try c.decodeIfPresent(String.self, forKey: .productVersion)
+        buildVersion = try c.decodeIfPresent(String.self, forKey: .buildVersion)
+        socFamily = try c.decodeIfPresent(String.self, forKey: .socFamily)
+    }
     public init(productType: String? = nil, productVersion: String? = nil, buildVersion: String? = nil, socFamily: String? = nil) {
         self.productType = productType; self.productVersion = productVersion
         self.buildVersion = buildVersion; self.socFamily = socFamily
@@ -70,6 +78,22 @@ public struct Evidence: Codable, Equatable, Identifiable, Sendable {
         case trackerClaimId = "tracker_claim_id", evidenceClass = "class", sourceUrls = "source_urls"
         case publicationDate = "publication_date", accessDate = "access_date", contradictingIds = "contradicting_ids"
     }
+    public init(from decoder: Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: ["id", "tracker_claim_id", "title", "class", "scope", "source_urls",
+                                                 "publication_date", "access_date", "confidence", "limitations", "contradicting_ids"])
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        trackerClaimId = try c.decodeIfPresent(String.self, forKey: .trackerClaimId)
+        title = try c.decode(String.self, forKey: .title)
+        evidenceClass = try c.decode(EvidenceClass.self, forKey: .evidenceClass)
+        scope = try c.decode(EvidenceScope.self, forKey: .scope)
+        sourceUrls = try c.decode([String].self, forKey: .sourceUrls)
+        publicationDate = try c.decodeIfPresent(String.self, forKey: .publicationDate)
+        accessDate = try c.decodeIfPresent(String.self, forKey: .accessDate)
+        confidence = try c.decode(Confidence.self, forKey: .confidence)
+        limitations = try c.decode(String.self, forKey: .limitations)
+        contradictingIds = try c.decode([String].self, forKey: .contradictingIds)
+    }
     public init(id: String, trackerClaimId: String? = nil, title: String = "synthetic", evidenceClass: EvidenceClass,
                 scope: EvidenceScope, sourceUrls: [String] = [], publicationDate: String? = nil, accessDate: String? = nil,
                 confidence: Confidence, limitations: String = "", contradictingIds: [String] = []) {
@@ -94,6 +118,20 @@ public struct Declaration: Codable, Equatable, Identifiable, Sendable {
         case id, architecture, status, note
         case productType = "product_type", socFamily = "soc_family", productVersion = "product_version"
         case buildVersion = "build_version", evidenceIds = "evidence_ids"
+    }
+    public init(from decoder: Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: ["id", "product_type", "soc_family", "product_version", "build_version",
+                                                 "architecture", "status", "evidence_ids", "note"])
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        productType = try c.decode(String.self, forKey: .productType)
+        socFamily = try c.decode(String.self, forKey: .socFamily)
+        productVersion = try c.decode(String.self, forKey: .productVersion)
+        buildVersion = try c.decode(String.self, forKey: .buildVersion)
+        architecture = try c.decodeIfPresent(String.self, forKey: .architecture)
+        status = try c.decode(CompatibilityStatus.self, forKey: .status)
+        evidenceIds = try c.decode([String].self, forKey: .evidenceIds)
+        note = try c.decode(String.self, forKey: .note)
     }
     public init(id: String, productType: String, socFamily: String, productVersion: String, buildVersion: String,
                 architecture: String?, status: CompatibilityStatus, evidenceIds: [String], note: String) {

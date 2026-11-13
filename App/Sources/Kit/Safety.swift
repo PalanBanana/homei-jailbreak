@@ -14,6 +14,17 @@ public enum SafetyManager {
         public var isAllowed: Bool { self == .allowed }
     }
 
+    /// Operations that are recognised and denied. Anything in neither set is "unrecognised".
+    public static let knownPrivilegedOperations: Set<String> = [
+        "install_jailbreak", "execute_exploit", "escalate_privileges", "modify_kernel_memory", "bypass_sptm",
+        "bypass_txm", "bypass_amfi", "extract_protected_memory", "modify_root_filesystem", "install_bootstrap",
+        "inject_tweak", "install_ipa", "install_package", "modify_trust_cache", "reboot_device",
+        "enter_dfu_or_recovery", "update_firmware", "restore_firmware", "downgrade_firmware", "modify_ota_settings",
+        "modify_configuration_profile", "connect_usb_device", "pair_device", "create_backup", "collect_sysdiagnose",
+        "run_remote_script",
+    ]
+
+    /// Reason texts are identical to the Rust core so the two implementations can be compared exactly.
     public static func authorize(operation name: String) -> Decision {
         if readOnlyOperations.contains(name) { return .allowed }
         switch name {
@@ -22,7 +33,10 @@ public enum SafetyManager {
         case "run_remote_script":
             return .denied(reason: "Remote scripts are never executed, and metadata cannot carry commands.")
         default:
-            return .denied(reason: "Privileged, device-affecting and unrecognised operations are unavailable: this research-stage build contains no verified backend.")
+            if knownPrivilegedOperations.contains(name) {
+                return .denied(reason: "Privileged and device-affecting operations are unavailable: this research-stage build contains no verified backend.")
+            }
+            return .denied(reason: "Unrecognised operation '\(name)' is denied by default.")
         }
     }
 

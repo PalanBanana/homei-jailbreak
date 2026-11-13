@@ -3,7 +3,7 @@ name: validate
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,9 @@ jobs:
 
       - name: Validate data, schemas, privacy rules and structure
         run: python scripts/validate_data.py
+
+      - name: Check colour contrast of the interface tokens
+        run: python scripts/check_contrast.py
 
       - name: Check formatting
         run: cargo fmt --all -- --check

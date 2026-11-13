@@ -116,10 +116,15 @@ pub fn build_report(bundle: &Bundle, decision: &Decision) -> Report {
 /// Export a report as JSON. Refuses to export if any token looks like an identifier.
 pub fn export(report: &Report) -> Result<String, String> {
     let json = serde_json::to_string_pretty(report).map_err(|e| e.to_string())?;
-    for token in json.split(|c: char| !(c.is_ascii_alphanumeric() || c == '-')) {
-        if token.len() >= 14 && looks_like_identifier(token) {
-            return Err("export blocked: an identifier-like value was found".to_string());
-        }
+    if contains_identifier_like_token(&json) {
+        return Err("export blocked: an identifier-like value was found".to_string());
     }
     Ok(json)
+}
+
+/// True if any ASCII-alphanumeric token (hyphens allowed) of 14 bytes or more looks like an
+/// identifier. The Swift kit implements the same rule, and shared test vectors compare them.
+pub fn contains_identifier_like_token(text: &str) -> bool {
+    text.split(|c: char| !(c.is_ascii_alphanumeric() || c == '-'))
+        .any(|token| token.len() >= 14 && looks_like_identifier(token))
 }

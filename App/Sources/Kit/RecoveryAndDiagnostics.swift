@@ -30,7 +30,7 @@ public enum Recovery {
 }
 
 public struct DiagnosticsReport: Codable, Sendable {
-    public let product = "HOMEI"
+    public let product: String
     public let researchSnapshotDate: String
     public let trackerCommit: String
     public let profileProvenance: String
@@ -46,7 +46,7 @@ public struct DiagnosticsReport: Codable, Sendable {
         let fixturesOk = store.fixtures.allSatisfy { $0.profile.provenance == .testFixture && (try? $0.profile.validate()) != nil }
         let noPositive = store.declarations.allSatisfy { !$0.status.isPositive }
         return DiagnosticsReport(
-            researchSnapshotDate: store.snapshotDate, trackerCommit: store.trackerCommit,
+            product: "HOMEI", researchSnapshotDate: store.snapshotDate, trackerCommit: store.trackerCommit,
             profileProvenance: decision.provenance.label, compatibility: decision.status.label,
             explanation: decision.explanation,
             checks: ["evidence_references_resolve": refsOk, "fixtures_are_test_fixtures": fixturesOk, "no_bundled_positive_state": noPositive])
@@ -57,8 +57,15 @@ public struct DiagnosticsReport: Codable, Sendable {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         guard let data = try? encoder.encode(self), let json = String(data: data, encoding: .utf8) else { return nil }
-        let separators = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-")).inverted
-        for token in json.components(separatedBy: separators) where token.count >= 14 && looksLikeIdentifier(token) { return nil }
-        return json
+        return Self.containsIdentifierLikeToken(json) ? nil : json
+    }
+
+    /// True if any ASCII-alphanumeric token (hyphens allowed) of 14 bytes or more looks like an identifier.
+    public static func containsIdentifierLikeToken(_ text: String) -> Bool {
+        let tokenChars = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-")
+        for token in text.components(separatedBy: tokenChars.inverted) where token.utf8.count >= 14 && looksLikeIdentifier(token) {
+            return true
+        }
+        return false
     }
 }

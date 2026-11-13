@@ -44,6 +44,7 @@ dependencies = [
  "homei-bootstrap",
  "homei-catalog",
  "homei-core",
+ "serde",
  "serde_json",
 ]
 

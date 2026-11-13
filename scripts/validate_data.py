@@ -35,7 +35,10 @@ REQUIRED_FILES = [
     "Docs/ARCHITECTURE.md", "Docs/DEVICE_COMPATIBILITY.md", "Docs/SAFETY.md", "Docs/RECOVERY.md",
     "Docs/DEVELOPMENT.md", "Docs/ROADMAP.md", "Docs/REFERENCE_PROJECT_AUDIT.md",
     "Docs/PRODUCT_DIFFERENTIATION.md", "Docs/PRODUCT_REQUIREMENTS.md", "Docs/DESIGN_SPEC.md",
-    "App/Sources/HomeiApp.swift", "App/Resources/en.lproj/Localizable.strings",
+    "App/Sources/HomeiApp.swift", "App/project.yml", "App/Resources/HOMEI.entitlements",
+    "App/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json", "Tests/golden/parity-vectors.json",
+    "Tests/SwiftTests/ParityTests.swift", "scripts/check_contrast.py", "scripts/generate_app_icon.py",
+    ".github/workflows/swift-build.yml", "App/Resources/en.lproj/Localizable.strings",
     "App/Resources/ko.lproj/Localizable.strings", "App/Resources/Branding/homei-icon.svg",
     ".github/workflows/validate.yml", ".github/workflows/secret-scan.yml",
 ]
@@ -56,7 +59,8 @@ PRIVACY = {
 # The test files below contain deliberately identifier-shaped synthetic strings that the code under
 # test must reject. They are not real identifiers.
 PRIVACY_EXEMPT = {"scripts/validate_data.py", "Tests/UnitTests/device_profile.rs", "Tests/FixtureTests/bundle.rs",
-                  "Tests/CompatibilityTests/engine.rs", "Tests/SwiftTests/EngineTests.swift", "Cargo.lock"}
+                  "Tests/CompatibilityTests/engine.rs", "Tests/SwiftTests/EngineTests.swift",
+                  "Tests/golden/parity-vectors.json", "Cargo.lock"}
 SKIP_DIRS = {".git", "target", "node_modules", ".build"}
 TEXT_SUFFIXES = {".md", ".json", ".rs", ".toml", ".swift", ".strings", ".svg", ".yml", ".yaml", ".py", ".txt", ".lock", ""}
 
@@ -158,6 +162,26 @@ def main() -> int:
                     continue
                 priv.append(f"{rel}:{body.count(chr(10), 0, m.start()) + 1}: {name}")
     check("privacy and secret patterns absent", priv)
+
+    icons = ROOT / "App/Resources/Assets.xcassets/AppIcon.appiconset"
+    ic = []
+    try:
+        catalog = json.loads((icons / "Contents.json").read_text(encoding="utf-8"))
+        for img in catalog["images"]:
+            png = icons / img["filename"]
+            if not png.is_file():
+                ic.append(f"missing {img['filename']}")
+                continue
+            head = png.read_bytes()[:26]
+            w, h = int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+            want = round(float(img["size"].split("x")[0]) * int(img["scale"].rstrip("x")))
+            if (w, h) != (want, want):
+                ic.append(f"{img['filename']} is {w}x{h}, expected {want}x{want}")
+            if head[25] in (4, 6):
+                ic.append(f"{img['filename']} has an alpha channel (iOS icons must be opaque)")
+    except (OSError, KeyError, ValueError) as e:
+        ic.append(str(e))
+    check("app icon set is complete, correctly sized and opaque", ic)
 
     en = [l for l in (ROOT / "README.md").read_text(encoding="utf-8").splitlines() if l.startswith("## ")]
     kr = [l for l in (ROOT / "README_KR.md").read_text(encoding="utf-8").splitlines() if l.startswith("## ")]
