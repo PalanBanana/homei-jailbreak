@@ -110,8 +110,15 @@ struct DataKindsLegend: View {
 struct ProvenanceBanner: View {
     let provenance: Provenance
 
+    /// Localised label for the provenance. If a key were ever missing, the fallback is a generic
+    /// label that still does not claim a live connection, never a raw key.
+    private var text: String {
+        Bundle.main.localizedString(forKey: provenance.localizationKey,
+                                    value: String(localized: "provenance.unknown"), table: nil)
+    }
+
     var body: some View {
-        Label(LocalizedStringKey("provenance.\(provenance.rawValue)"), systemImage: "doc.text.magnifyingglass")
+        Label(text, systemImage: "doc.text.magnifyingglass")
             .font(.footnote)
             .foregroundStyle(Theme.accent)
             .fixedSize(horizontal: false, vertical: true)

@@ -107,10 +107,29 @@ struct SettingsView: View {
         Screen(titleKey: "settings.title") {
             if let store = model.store {
                 SectionCard(titleKey: "settings.fixture_picker") {
-                    Picker("settings.fixture_picker", selection: $model.selectedFixtureID) {
-                        ForEach(store.fixtures) { Text($0.label).tag($0.id) }
+                    // Selectable rows, not a wheel picker: full labels wrap instead of truncating,
+                    // each row is at least 44 pt tall, and the selected row carries the selected trait.
+                    ForEach(store.fixtures) { fixture in
+                        let selected = fixture.id == model.selectedFixtureID
+                        Button {
+                            model.selectedFixtureID = fixture.id
+                        } label: {
+                            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                                Text(fixture.label)
+                                    .multilineTextAlignment(.leading)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 8)
+                                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                                    .accessibilityHidden(true)
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(selected ? .isSelected : [])
                     }
-                    .pickerStyle(.inline)
                 }
                 if let fixture = model.fixture { ProvenanceBanner(provenance: fixture.profile.provenance) }
             }

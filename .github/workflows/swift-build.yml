@@ -93,7 +93,7 @@ jobs:
     # Runs the app on an iOS Simulator and checks what each screen says, what it must not offer,
     # Korean text, the largest text size, and Apple's accessibility audit. Simulator only.
     runs-on: macos-26
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -142,26 +142,29 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee ui-test.log
 
-      - name: Export screenshots and accessibility audit results
+      - name: Export screenshots and accessibility audit records
         if: always()
         run: |
-          mkdir -p build/attachments
+          mkdir -p build/attachments build/upload
           if [ -d build/ui-tests.xcresult ]; then
             xcrun xcresulttool get test-results summary --path build/ui-tests.xcresult || true
             xcrun xcresulttool export attachments --path build/ui-tests.xcresult --output-path build/attachments || true
           fi
-          echo "--- accessibility audit records"
-          for f in build/attachments/*; do
-            [ -f "$f" ] || continue
-            if grep -q . "$f" 2>/dev/null && file "$f" | grep -qi 'text'; then echo "== $f"; cat "$f"; echo; fi
-          done | head -200
-          echo "--- exported files"; ls build/attachments | head -80
+          ls build/attachments | wc -l
+          # Keep screenshots, audit records and the manifest. Screen recordings are not uploaded.
+          cp build/attachments/manifest.json build/upload/ 2>/dev/null || true
+          find build/attachments -maxdepth 1 \( -name '*.png' -o -name '*.json' -o -name '*.txt' \) -exec cp {} build/upload/ \;
+          du -sh build/upload
 
-      - name: Upload screenshots and audit records (simulator screenshots only, no build products)
+      - name: Summarise the contrast and accessibility audit
+        if: always()
+        run: python3 scripts/summarize_ui_audit.py build/attachments
+
+      - name: Upload screenshots and audit records (no screen recordings, no build products)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ui-test-attachments
-          path: build/attachments
+          path: build/upload
           retention-days: 14
           if-no-files-found: warn

@@ -7,6 +7,11 @@ public enum Provenance: String, Codable, CaseIterable, Sendable {
     case userAuthorizedReadOnlyObservation = "user_authorized_read_only_observation"
     case publicFirmwareMetadata = "public_firmware_metadata"
 
+    /// Key into Localizable.strings. Every case must have an entry in every language file.
+    public var localizationKey: String { "provenance.\(rawValue)" }
+
+    /// English label. The app shows the localised string for `localizationKey`; this is the source of
+    /// the English text, and a test keeps the two identical.
     public var label: String {
         switch self {
         case .manualProfile: return "Manual profile"

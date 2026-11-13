@@ -71,6 +71,7 @@
 "provenance.manual_profile" = "Manual profile";
 "provenance.public_firmware_metadata" = "Public firmware metadata";
 "provenance.test_fixture" = "Test fixture (not a connected device)";
+"provenance.unknown" = "Unverified data source (not a connected device)";
 "provenance.user_authorized_read_only_observation" = "User-authorized read-only observation (imported, not live)";
 "recovery.documented" = "Documented";
 "recovery.no_go" = "GO / NO-GO";

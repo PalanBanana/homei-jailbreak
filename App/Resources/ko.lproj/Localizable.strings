@@ -71,6 +71,7 @@
 "provenance.manual_profile" = "수동 프로필";
 "provenance.public_firmware_metadata" = "공개 펌웨어 메타데이터";
 "provenance.test_fixture" = "테스트 데이터 (연결된 기기가 아님)";
+"provenance.unknown" = "확인되지 않은 데이터 출처 (연결된 기기가 아님)";
 "provenance.user_authorized_read_only_observation" = "사용자가 허가한 읽기 전용 관측 (가져온 것이며 실시간이 아님)";
 "recovery.documented" = "문서화됨";
 "recovery.no_go" = "진행 / 중단 판단";

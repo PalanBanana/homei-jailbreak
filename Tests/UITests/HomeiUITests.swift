@@ -41,61 +41,114 @@ final class HomeiUITests: XCTestCase {
         link.tap()
     }
 
-    /// Run Apple's accessibility audit on the top of the screen and on every scrolled page, so content
-    /// that starts out under the floating tab bar is also measured while it is unobscured.
-    ///
-    /// An issue is reported unless its element physically overlaps the system tab bar or navigation
-    /// bar. Those are recorded separately as "obscured", never silently dropped, because the audit
-    /// measures text against the translucent bar behind it and not against the card it belongs to.
-    private func audit(_ app: XCUIApplication, screen: String) {
-        var reported: [String] = []
-        var obscured: [String] = []
-        var pages = 0
+    // MARK: Accessibility and contrast audit
 
-        func runOnce(page: Int) {
-            let bar = app.tabBars.firstMatch.frame
-            let nav = app.navigationBars.firstMatch.frame
-            var attempt = 0
-            while true {
-                attempt += 1
-                do {
-                    try app.performAccessibilityAudit { issue in
-                        let line = "page \(page): \(issue.auditType): \(issue.compactDescription) [\(issue.element?.label ?? "?")]"
-                        if let frame = issue.element?.frame, frame.intersects(bar) || frame.intersects(nav) {
-                            obscured.append(line)
-                            return true
-                        }
-                        reported.append(line)
-                        return false
+    /// Machine-readable record of one screen, attached to the test result and summarised by CI.
+    private struct ScreenAudit: Codable {
+        let screen: String
+        let pages: Int
+        let reachedEnd: Bool
+        let raw: [ContrastObservation]
+        let final: [ContrastObservation]
+        let appleReported: [String]
+        let appleOccluded: [String]
+        let appleUnattributed: [String]
+        let appleInconclusive: [String]
+    }
+
+    /// Scroll by about a quarter of the screen. The unobscured viewport is much taller than one step,
+    /// so every text run passes through it fully on at least one page.
+    private func scrollDown(_ app: XCUIApplication) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.70))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.47))
+        start.press(forDuration: 0.05, thenDragTo: end)
+        Thread.sleep(forTimeInterval: 0.7) // let the scroll settle before reading the screen
+    }
+
+    /// Apple's audit, bounded to two attempts. A failure to complete is recorded as inconclusive and
+    /// fails the test. It is never treated as a pass.
+    private func appleAudit(_ app: XCUIApplication, page: Int, reported: inout [String], occluded: inout [String],
+                            unattributed: inout [String], inconclusive: inout [String]) {
+        let zones = ContrastAnalyzer.overlayZones(app: app)
+        var reportedHere: [String] = [], occludedHere: [String] = [], inconclusiveHere: [String] = []
+        for attempt in 1...2 {
+            reportedHere = []; occludedHere = []; inconclusiveHere = []
+            do {
+                try app.performAccessibilityAudit { issue in
+                    let line = "page \(page): \(issue.auditType): \(issue.compactDescription) [\(issue.element?.label ?? "?")]"
+                    guard let frame = issue.element?.frame else {
+                        // Apple reported an issue it cannot attribute to an element. It is kept as an explicit
+                        // INCONCLUSIVE record and is never counted as a pass.
+                        inconclusiveHere.append(line + " (no addressable element)")
+                        return true
                     }
-                    return
-                } catch {
-                    if attempt >= 2 {
-                        reported.append("page \(page): audit could not run: \(error)")
-                        return
+                    if zones.contains(where: { frame.intersects($0) }) {
+                        occludedHere.append(line)
+                        return true
                     }
+                    reportedHere.append(line)
+                    return false
                 }
+                reported += reportedHere; occluded += occludedHere; unattributed += inconclusiveHere
+                return
+            } catch {
+                if attempt == 2 { inconclusive.append("page \(page): Apple audit did not complete after 2 attempts: \(error)") }
+            }
+        }
+    }
+
+    /// Audit one screen completely: every scrolled page is analysed with the pixel contrast
+    /// analyzer, and Apple's audit runs on the first and the last page.
+    private func audit(_ app: XCUIApplication, screen: String) {
+        var raw: [ContrastObservation] = []
+        var reported: [String] = [], occluded: [String] = [], unattributed: [String] = [], inconclusive: [String] = []
+        var pages = 0
+        var reachedEnd = false
+
+        for page in 0..<30 {
+            pages = page + 1
+            raw += ContrastAnalyzer.analyzePage(app: app, screen: screen, page: page)
+            let before = app.screenshot()
+            let attachment = XCTAttachment(screenshot: before)
+            attachment.name = "\(screen)-page-\(page)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            if page == 0 { appleAudit(app, page: 0, reported: &reported, occluded: &occluded, unattributed: &unattributed, inconclusive: &inconclusive) }
+            scrollDown(app)
+            if app.screenshot().pngRepresentation == before.pngRepresentation {
+                reachedEnd = true
+                if page > 0 { appleAudit(app, page: page, reported: &reported, occluded: &occluded, unattributed: &unattributed, inconclusive: &inconclusive) }
+                break
             }
         }
 
-        runOnce(page: 0)
-        var previous = app.screenshot().pngRepresentation
-        for page in 1...5 {
-            app.swipeUp()
-            let current = app.screenshot().pngRepresentation
-            if current == previous { break }
-            previous = current
-            pages = page
-            runOnce(page: page)
+        // Apple findings it could not attach to an element are INCONCLUSIVE observations.
+        for line in unattributed {
+            raw.append(ContrastObservation(screen: screen, page: -1, label: line, classification: .inconclusive, ratio: nil,
+                                           foreground: nil, background: nil, detail: "reported by Apple's audit without an element"))
+        }
+        // Apple's clipped-text findings become CLIPPED observations.
+        for line in reported where line.contains("Text clipped") {
+            raw.append(ContrastObservation(screen: screen, page: -1, label: line, classification: .clipped, ratio: nil,
+                                           foreground: nil, background: nil, detail: "reported by Apple's accessibility audit"))
+        }
+        let final = ContrastAnalyzer.finalize(raw)
+        let record = ScreenAudit(screen: screen, pages: pages, reachedEnd: reachedEnd, raw: raw, final: final,
+                                 appleReported: reported, appleOccluded: occluded, appleUnattributed: unattributed, appleInconclusive: inconclusive)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        if let data = try? encoder.encode(record) {
+            let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+            attachment.name = "audit-\(screen).json"
+            attachment.lifetime = .keepAlways
+            add(attachment)
         }
 
-        let summary = "audited \(pages + 1) page(s)\nreported:\n" + (reported.isEmpty ? "  none" : reported.map { "  " + $0 }.joined(separator: "\n"))
-            + "\nobscured by system bars (not counted):\n" + (obscured.isEmpty ? "  none" : obscured.map { "  " + $0 }.joined(separator: "\n"))
-        let attachment = XCTAttachment(string: summary)
-        attachment.name = "accessibility-audit-\(screen)"
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        for issue in reported { XCTFail("\(screen): \(issue)") }
+        XCTAssertTrue(reachedEnd, "\(screen): did not reach the end of the screen within 30 pages")
+        for o in final where o.classification == .fail { XCTFail("\(screen): contrast FAIL \(o.ratio ?? 0):1 [\(o.label)] page \(o.page)") }
+        for o in final where o.classification == .clipped { XCTFail("\(screen): CLIPPED [\(o.label)] page \(o.page)") }
+        for line in reported { XCTFail("\(screen): Apple audit: \(line)") }
+        for line in inconclusive { XCTFail("\(screen): \(line)") }
     }
 
     // MARK: Screens
@@ -212,12 +265,24 @@ final class HomeiUITests: XCTestCase {
         for label in ["Comparison record (A19 Pro, same version and build)", "Comparison record (A18 Pro, iOS 27.2)"] {
             openMore(app, "Settings")
             let option = app.buttons[label].firstMatch
-            XCTAssertTrue(option.waitForExistence(timeout: 5), label)
+            XCTAssertTrue(option.waitForExistence(timeout: 5), "settings option \(label)")
             option.tap()
+            XCTAssertTrue(app.buttons[label].firstMatch.isSelected, "\(label) is marked selected")
             app.navigationBars.buttons.element(boundBy: 0).tap()
             tab(app, "Dashboard")
             XCTAssertTrue(has(app, "NOT ESTABLISHED"), label)
             XCTAssertFalse(has(app, "SUPPORTED", timeout: 1), label)
+        }
+    }
+
+    func testSettingsOptionsAreReadableWithoutTruncation() {
+        let app = launch()
+        openMore(app, "Settings")
+        for label in ["Research target (A17 Pro)", "Comparison record (A19 Pro, same version and build)",
+                      "Comparison record (A18 Pro, iOS 27.2)"] {
+            let option = app.buttons[label].firstMatch
+            XCTAssertTrue(option.waitForExistence(timeout: 5), "full, untruncated label: \(label)")
+            XCTAssertGreaterThanOrEqual(option.frame.height, 44, "hit target of \(label)")
         }
     }
 
@@ -232,6 +297,20 @@ final class HomeiUITests: XCTestCase {
         XCTAssertFalse(has(app, "not a connected device", timeout: 1), "no untranslated provenance text")
         shot(app, "dashboard-ko")
         audit(app, screen: "dashboard-ko")
+    }
+
+    func testKoreanInterfaceAtTheLargestAccessibilityTextSize() {
+        let app = launch(language: "ko", locale: "ko_KR",
+                         extra: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+        XCTAssertTrue(has(app, "확립되지 않음", timeout: 15))
+        XCTAssertTrue(has(app, "연구 전용"))
+        let window = app.windows.firstMatch.frame
+        for element in app.staticTexts.allElementsBoundByIndex where !element.label.isEmpty {
+            XCTAssertGreaterThanOrEqual(element.frame.minX, -0.5, "left overflow: \(element.label)")
+            XCTAssertLessThanOrEqual(element.frame.maxX, window.width + 0.5, "right overflow: \(element.label)")
+        }
+        shot(app, "dashboard-ko-xxxl")
+        audit(app, screen: "dashboard-ko-xxxl")
     }
 
     func testLargestAccessibilityTextSizeKeepsKeyContentReachable() {
