@@ -90,6 +90,7 @@ final class HomeiUITests: XCTestCase {
         var reported: [String] = []
         var occluded: [String] = []
         var overruled: [String] = []
+        var contrast: [(line: String, label: String)] = []
         var unattributed: [String] = []
         var inconclusive: [String] = []
     }
@@ -117,6 +118,10 @@ final class HomeiUITests: XCTestCase {
                     }
                     if zones.contains(where: { frame.intersects($0) }) {
                         here.occluded.append(line)
+                        return true
+                    }
+                    if issue.auditType == .contrast {
+                        here.contrast.append((line, issue.element?.label ?? ""))
                         return true
                     }
                     if issue.compactDescription.contains("Text clipped") {
@@ -148,6 +153,7 @@ final class HomeiUITests: XCTestCase {
                 }
             }
         }
+        found.contrast += here.contrast
         found.reported += here.reported; found.occluded += here.occluded; found.overruled += here.overruled
         found.unattributed += here.unattributed; found.inconclusive += here.inconclusive
     }
@@ -201,6 +207,17 @@ final class HomeiUITests: XCTestCase {
                                            foreground: nil, background: nil, detail: "reported by Apple's audit and confirmed by glyph pixels at the frame boundary"))
         }
         let final = ContrastAnalyzer.finalize(raw)
+
+        // Apple's contrast findings: if the pixel analyzer measured the same text unobscured and it passes,
+        // the finding is overruled and kept in the record with both numbers. Otherwise it stands.
+        for item in apple.contrast {
+            let key = String(item.label.prefix(80))
+            if let measured = final.first(where: { $0.label == key && $0.classification == .pass }), let r = measured.ratio {
+                apple.overruled.append(item.line + " (pixel measurement \(r):1, at least \(ContrastAnalyzer.threshold):1, on page \(measured.page); the element is legible)")
+            } else {
+                apple.reported.append(item.line + " (not confirmed as passing by the pixel analyzer)")
+            }
+        }
         let record = ScreenAudit(screen: screen, pages: pages, reachedEnd: reachedEnd, raw: raw, final: final,
                                  appleReported: apple.reported, appleOccluded: apple.occluded, appleOverruled: apple.overruled,
                                  appleUnattributed: apple.unattributed, appleInconclusive: apple.inconclusive)

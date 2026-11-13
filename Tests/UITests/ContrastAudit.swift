@@ -132,6 +132,10 @@ enum ContrastAnalyzer {
 
     // MARK: Measurement
 
+    /// Inset, in points, applied to every side of a frame before measuring. A rounded container clears its
+    /// corners at about 15% of its height, so the inset grows with the element, between 8 and 24 points.
+    static func inset(forHeight height: CGFloat) -> CGFloat { min(max(8, height * 0.18), 24) }
+
     struct Measurement {
         let ratio: Double
         let foreground: (Double, Double, Double)
@@ -232,20 +236,32 @@ enum ContrastAnalyzer {
                                     foreground: m.map { hex($0.foreground) }, background: m.map { hex($0.background) }, detail: detail)
             }
 
+            var measured = frame
             if zones.contains(where: { frame.intersects($0) }) {
-                out.append(obs(.occluded, "inside a system bar or its scroll-edge zone"))
-                continue
+                // Measure the part of the element that lies between the zones. If too little of it does,
+                // for example a short line inside the blur, it stays OCCLUDED and is never counted as a pass.
+                let top = zones.filter { $0.minY <= 0 }.map(\.maxY).max() ?? 0
+                let bottom = zones.filter { $0.maxY >= window.height }.map(\.minY).min() ?? window.height
+                let band = CGRect(x: 0, y: top, width: window.width, height: max(0, bottom - top))
+                let visible = frame.intersection(band)
+                guard !visible.isNull, visible.height >= 18 else {
+                    out.append(obs(.occluded, "inside a system bar or its scroll-edge zone"))
+                    continue
+                }
+                measured = visible
             }
             if frame.minX < -0.5 || frame.maxX > window.width + 0.5 || frame.minY < -0.5 || frame.maxY > window.height + 0.5 {
                 out.append(obs(.clipped, "frame is cut by the screen edge"))
                 continue
             }
-            let pixelRect = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale, height: frame.height * scale)
-            guard let m = measure(image, pixelRect: pixelRect, insetPixels: 8 * scale) else {
+            let pixelRect = CGRect(x: measured.minX * scale, y: measured.minY * scale, width: measured.width * scale, height: measured.height * scale)
+            let partial = measured.height < frame.height - 0.5
+            guard let m = measure(image, pixelRect: pixelRect, insetPixels: inset(forHeight: measured.height) * scale) else {
                 out.append(obs(.inconclusive, "too few glyph pixels to measure"))
                 continue
             }
-            out.append(obs(m.ratio >= threshold ? .pass : .fail, "measured \(String(format: "%.2f", m.ratio)):1 against \(threshold):1", m))
+            out.append(obs(m.ratio >= threshold ? .pass : .fail,
+                           "measured \(String(format: "%.2f", m.ratio)):1 against \(threshold):1" + (partial ? " on the part outside the system zones" : ""), m))
         }
         return out
     }
