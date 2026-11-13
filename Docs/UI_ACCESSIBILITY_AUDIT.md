@@ -23,7 +23,7 @@ Every screen is audited completely:
 
 1. The test scrolls in steps of about a quarter of the screen. At each page it takes one screenshot and one snapshot of the accessibility tree.
 2. A scroll that moves nothing is tried up to two more times before it counts as the end of the screen. A page believed to be last that still has text under the tab bar fails the audit as not fully audited.
-3. Apple's `performAccessibilityAudit` runs on the first and the last page, with a bound of two attempts. A run that cannot complete is recorded and fails the test.
+3. Apple's `performAccessibilityAudit` runs on the first and the last page, after a short settle delay, with a bound of two attempts. If it still does not complete (it returns "Audit failed to complete in time"), that is recorded as an explicit INCONCLUSIVE result that is counted and listed. It is never a pass. This audit timed out under runner load on three occasions, always on the first audit after a launch, so a hard failure was making CI fail at random. The pixel analysis of the same screen is not affected.
 4. Every text element on every page is measured by a pixel analyzer: the screenshot is cropped to the element, the dominant colour of the crop is taken as the effective background (so tints and translucency as rendered are included), the glyph colours are found, and WCAG 2.x contrast is computed. The crop is inset so rounded corners of a container are not read as text.
 5. A screenshot of every page and a JSON record per screen are kept as test attachments.
 
