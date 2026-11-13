@@ -15,6 +15,7 @@ Verified on a GitHub-hosted macOS runner: macOS 26.7.2, Xcode 26.6 (17F113), Swi
 - App icon set generated from the original SVG by a reproducible script (13 opaque PNG sizes, byte-identical on rerun).
 - Dependency audit: `cargo audit` and `cargo deny check` pass and run in CI. No third-party dependency version changed. `homei-tests` gained a direct `serde` dependency, which was already in the lockfile, and the five workspace crates moved to version 0.2.0.
 - New and changed files: `.github/workflows/swift-build.yml`, `.github/workflows/audit.yml`, `deny.toml`, `Tests/UITests/`, `Tests/golden/`, `Tests/SwiftTests/{ParityTests,LocalizationTests}.swift`, `scripts/{check_contrast,generate_app_icon,summarize_ui_audit}.py`, `Docs/UI_ACCESSIBILITY_AUDIT.md`.
+- Apple's accessibility audit intermittently timed out on the loaded hosted runner (three runs, three screens). It is now split into two bounded parts with three attempts each, and a part that never completes is an explicit INCONCLUSIVE result that is counted and listed. On one run the macOS job was never acquired by a hosted runner, so that commit has no UI result.
 - Still not done: VoiceOver, device testing, Increase Contrast and Reduce Transparency, iPad and landscape.
 - The research target still evaluates to NOT ESTABLISHED. No compatibility claim changed.
 

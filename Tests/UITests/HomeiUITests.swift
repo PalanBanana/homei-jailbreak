@@ -105,9 +105,9 @@ final class HomeiUITests: XCTestCase {
         var inconclusive: [String] = []
     }
 
-    /// Apple's audit, bounded to two attempts. If it still does not complete, that is recorded as an explicit
-    /// INCONCLUSIVE observation, counted in the results and listed in the summary. It is never treated as a pass,
-    /// and the pixel analysis of the same screen is unaffected.
+    /// Apple's audit, in two smaller parts with up to three attempts each. If a part still does not complete,
+    /// that is recorded as an explicit INCONCLUSIVE observation, counted in the results and listed in the summary.
+    /// It is never treated as a pass, and the pixel analysis of the same screen is unaffected.
     ///
     /// An issue whose element lies in a system bar or scroll-edge zone is recorded as occluded. An issue
     /// Apple cannot attach to an element is recorded as unattributed. A "text clipped" issue is checked
@@ -122,13 +122,12 @@ final class HomeiUITests: XCTestCase {
         // runner a single combined audit intermittently hit Apple's internal time limit ("Audit failed to
         // complete in time", code -56) on whichever screen happened to be running. Splitting keeps each call
         // short, and a failure now names the part that did not finish. Each part gets three attempts with a
-        // pause in between, and a part that never completes fails the test: a timeout is never a pass.
+        // pause in between. A part that never completes is recorded as INCONCLUSIVE: a timeout is never a pass.
         let parts: [(name: String, types: XCUIAccessibilityAuditType)] = [
             ("contrast", .contrast),
             ("element, hit-region, description, text-size, clipping and trait checks", XCUIAccessibilityAuditType.all.subtracting(.contrast)),
         ]
         for part in parts {
-            var completed = false
             for attempt in 1...3 {
                 var partFindings = AppleFindings()
                 var partClipped: [(line: String, frame: CGRect)] = []
@@ -154,7 +153,6 @@ final class HomeiUITests: XCTestCase {
                         partFindings.reported.append(line)
                         return false
                     }
-                    completed = true
                     here.contrast += partFindings.contrast; here.reported += partFindings.reported
                     here.occluded += partFindings.occluded; here.unattributed += partFindings.unattributed
                     clippedCandidates += partClipped
@@ -167,7 +165,6 @@ final class HomeiUITests: XCTestCase {
                     }
                 }
             }
-            if !completed { continue }
         }
 
         if !clippedCandidates.isEmpty {
