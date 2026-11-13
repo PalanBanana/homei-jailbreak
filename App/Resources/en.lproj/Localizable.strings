@@ -68,6 +68,10 @@
 "legend.unknown_value" = "shown as UNKNOWN or NOT ESTABLISHED";
 "legend.user_profile" = "User-provided profile";
 "legend.user_profile_value" = "typed in or imported by you";
+"provenance.manual_profile" = "Manual profile";
+"provenance.public_firmware_metadata" = "Public firmware metadata";
+"provenance.test_fixture" = "Test fixture (not a connected device)";
+"provenance.user_authorized_read_only_observation" = "User-authorized read-only observation (imported, not live)";
 "recovery.documented" = "Documented";
 "recovery.no_go" = "GO / NO-GO";
 "recovery.no_guarantee" = "A backup or a saved signing ticket does not guarantee that a device can be restored to a given build.";

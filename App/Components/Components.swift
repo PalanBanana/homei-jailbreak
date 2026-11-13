@@ -86,6 +86,7 @@ struct DataKindBanner: View {
         Label(LocalizedStringKey(textKey), systemImage: symbol)
             .font(.footnote)
             .foregroundStyle(Theme.accent)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Theme.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
@@ -110,9 +111,10 @@ struct ProvenanceBanner: View {
     let provenance: Provenance
 
     var body: some View {
-        Label(provenance.label, systemImage: "doc.text.magnifyingglass")
+        Label(LocalizedStringKey("provenance.\(provenance.rawValue)"), systemImage: "doc.text.magnifyingglass")
             .font(.footnote)
             .foregroundStyle(Theme.accent)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Theme.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
@@ -125,6 +127,7 @@ struct ResearchOnlyNotice: View {
         VStack(alignment: .leading, spacing: 4) {
             Label("compat.research_only", systemImage: "lock.shield").font(.headline)
             Text("compat.research_only_detail").font(.footnote).foregroundStyle(Theme.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .foregroundStyle(Theme.textPrimary)
         .padding(Theme.spacing)
