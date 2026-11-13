@@ -49,17 +49,20 @@ def main(argv: list[str]) -> int:
         return 1
 
     total = Counter()
+    system = Counter()
     raw_occlusions = 0
     problems = []
     limits = []
     overruled = []
     lines = [f"{'screen':<22}{'pages':>6}" + "".join(f"{c:>14}" for c in CATEGORIES)]
     for rec in sorted(records, key=lambda r: r["screen"]):
-        counts = Counter(o["classification"] for o in rec["final"])
+        app_obs = [o for o in rec["final"] if not o["label"].startswith("[system bar]")]
+        system.update(o["classification"] for o in rec["final"] if o["label"].startswith("[system bar]"))
+        counts = Counter(o["classification"] for o in app_obs)
         total.update(counts)
         raw_occlusions += sum(1 for o in rec["raw"] if o["classification"] == "OCCLUDED")
         lines.append(f"{rec['screen']:<22}{rec['pages']:>6}" + "".join(f"{counts[c]:>14}" for c in CATEGORIES))
-        for o in rec["final"]:
+        for o in app_obs:
             where = f"{rec['screen']} page {o['page']}: [{o['label']}] {o['detail']}"
             if o["classification"] in ("FAIL", "CLIPPED"):
                 problems.append(f"{o['classification']} {where}")
@@ -73,9 +76,14 @@ def main(argv: list[str]) -> int:
                 (problems if label == "APPLE-AUDIT" else limits).append(f"{label} {rec['screen']}: {line}")
         if not rec.get("reachedEnd", False):
             problems.append(f"{rec['screen']}: did not reach the end of the screen")
+        if rec.get("stoppedEarly", False):
+            problems.append(f"{rec['screen']}: scrolling stopped while text still lies under the tab bar (screen not fully audited)")
     lines.append(f"{'TOTAL':<22}{'':>6}" + "".join(f"{total[c]:>14}" for c in CATEGORIES))
 
-    out = ["UI contrast and accessibility audit", *lines, "",
+    out = ["UI contrast and accessibility audit (the application's own text)", *lines, "",
+           "System-drawn bar text (tab bar and navigation bar), reported apart because it is drawn by the system over a"
+           " translucent glass gradient and a pixel reading there is not reliable: "
+           + ", ".join(f"{c} {system[c]}" for c in CATEGORIES) + ".",
            f"Raw occlusion events across pages (elements seen inside a bar or scroll-edge zone): {raw_occlusions}",
            f"Problems (fail the step): {len(problems)}", *[f"  {p}" for p in problems],
            f"Limits (not passes, not failures): {len(limits)}", *[f"  {p}" for p in limits],

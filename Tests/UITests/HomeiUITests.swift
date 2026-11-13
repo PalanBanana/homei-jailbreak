@@ -3,8 +3,16 @@ import XCTest
 /// Simulator UI checks: what each screen says, what it must not offer, localisation, large text and
 /// Apple's built-in accessibility audit. Runs in CI on an iOS Simulator only. It never touches a device.
 final class HomeiUITests: XCTestCase {
+    /// The application launched by the current test, terminated afterwards so the next test starts clean.
+    private var launchedApp: XCUIApplication?
+
     override func setUpWithError() throws {
         continueAfterFailure = true
+    }
+
+    override func tearDownWithError() throws {
+        launchedApp?.terminate()
+        launchedApp = nil
     }
 
     // MARK: Helpers
@@ -12,6 +20,7 @@ final class HomeiUITests: XCTestCase {
     private func launch(language: String = "en", locale: String = "en_US", extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale] + extra
+        launchedApp = app
         app.launch()
         return app
     }
@@ -58,6 +67,7 @@ final class HomeiUITests: XCTestCase {
         let screen: String
         let pages: Int
         let reachedEnd: Bool
+        let stoppedEarly: Bool
         let raw: [ContrastObservation]
         let final: [ContrastObservation]
         let appleReported: [String]
@@ -165,6 +175,7 @@ final class HomeiUITests: XCTestCase {
         var apple = AppleFindings()
         var pages = 0
         var reachedEnd = false
+        var stoppedEarly = false
         var capture = ContrastAnalyzer.capture(app: app)
 
         for page in 0..<30 {
@@ -175,9 +186,19 @@ final class HomeiUITests: XCTestCase {
             add(attachment)
 
             // Scroll first, so we know whether this page is the last one before judging its bottom edge.
+            // A scroll that moves nothing is tried up to two more times before it counts as the end, because
+            // a single dropped gesture on a busy runner must not end an audit early.
             scrollDown(app)
-            let next = ContrastAnalyzer.capture(app: app)
+            var next = ContrastAnalyzer.capture(app: app)
+            for _ in 0..<2 where next.signature == capture.signature {
+                Thread.sleep(forTimeInterval: 0.6)
+                scrollDown(app)
+                next = ContrastAnalyzer.capture(app: app)
+            }
             let isLast = next.signature == capture.signature
+            if isLast && ContrastAnalyzer.textRemainsUnderTabBar(capture, app: app) {
+                stoppedEarly = true
+            }
             let isFirst = page == 0
             raw += ContrastAnalyzer.analyze(capture, app: app, screen: screen, pageIndex: page, isFirstPage: isFirst, isLastPage: isLast)
             if isFirst {
@@ -218,7 +239,7 @@ final class HomeiUITests: XCTestCase {
                 apple.reported.append(item.line + " (not confirmed as passing by the pixel analyzer)")
             }
         }
-        let record = ScreenAudit(screen: screen, pages: pages, reachedEnd: reachedEnd, raw: raw, final: final,
+        let record = ScreenAudit(screen: screen, pages: pages, reachedEnd: reachedEnd, stoppedEarly: stoppedEarly, raw: raw, final: final,
                                  appleReported: apple.reported, appleOccluded: apple.occluded, appleOverruled: apple.overruled,
                                  appleUnattributed: apple.unattributed, appleInconclusive: apple.inconclusive)
         let encoder = JSONEncoder()
@@ -231,6 +252,7 @@ final class HomeiUITests: XCTestCase {
         }
 
         XCTAssertTrue(reachedEnd, "\(screen): did not reach the end of the screen within 30 pages")
+        XCTAssertFalse(stoppedEarly, "\(screen): scrolling stopped while text still lies under the tab bar, so the screen was not fully audited")
         for o in final where o.classification == .fail { XCTFail("\(screen): contrast FAIL \(o.ratio ?? 0):1 [\(o.label)] page \(o.page)") }
         for o in final where o.classification == .clipped { XCTFail("\(screen): CLIPPED [\(o.label)] page \(o.page)") }
         for line in apple.reported { XCTFail("\(screen): Apple audit: \(line)") }

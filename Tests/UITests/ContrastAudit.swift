@@ -144,7 +144,11 @@ enum ContrastAnalyzer {
 
     /// Returns nil when there are too few glyph pixels to say anything. `insetPixels` shrinks the crop
     /// on every side before measuring.
-    static func measure(_ image: CGImage, pixelRect: CGRect, insetPixels: CGFloat) -> Measurement? {
+    ///
+    /// `minInkRatio` is how far from the background a colour must be to count as a glyph candidate. The
+    /// default of 1.15 keeps even faint text visible to the check. System bars sit on a smooth glass
+    /// gradient, so their text is measured with a higher floor to keep gradient noise from being read as glyphs.
+    static func measure(_ image: CGImage, pixelRect: CGRect, insetPixels: CGFloat, minInkRatio: Double = 1.15) -> Measurement? {
         let inset = min(insetPixels, pixelRect.width / 4, pixelRect.height / 4)
         guard let crop = pixels(image, crop: pixelRect.insetBy(dx: inset, dy: inset)) else { return nil }
         let all = buckets(crop.data)
@@ -154,7 +158,7 @@ enum ContrastAnalyzer {
 
         // Glyph colours: buckets that visibly differ from the background, ignoring the faint
         // anti-aliasing buckets that each hold only a small share of the pixels.
-        let candidates = all.filter { $0.key != backgroundKey && ratio(colour($0.value), background) > 1.15 }
+        let candidates = all.filter { $0.key != backgroundKey && ratio(colour($0.value), background) > minInkRatio }
         guard let strongest = candidates.values.map(\.count).max(), strongest >= 6 else { return nil }
         let significant = candidates.values.filter { Double($0.count) >= 0.25 * Double(strongest) }
         // The weakest significant glyph colour decides the result, so a low-contrast colour cannot
@@ -207,6 +211,20 @@ enum ContrastAnalyzer {
         return PageCapture(screenshot: shot, texts: texts)
     }
 
+    /// True when some text lies partly or wholly under the tab bar. On the real last page of a screen the
+    /// content ends above the bar, so this being true on a page believed to be last means the scroll did
+    /// not actually reach the end.
+    static func textRemainsUnderTabBar(_ page: PageCapture, app: XCUIApplication) -> Bool {
+        let tab = app.tabBars.firstMatch
+        guard tab.exists else { return false }
+        let bar = tab.frame
+        let window = app.windows.firstMatch.frame
+        return page.texts.contains { text in
+            !text.label.isEmpty && text.frame.height < window.height * 0.7
+                && text.frame.intersects(bar) && !bar.insetBy(dx: -2, dy: -2).contains(text.frame)
+        }
+    }
+
     /// Classify every text element visible on a captured page.
     static func analyze(_ page: PageCapture, app: XCUIApplication, screen: String, pageIndex: Int,
                         isFirstPage: Bool, isLastPage: Bool) -> [ContrastObservation] {
@@ -234,7 +252,7 @@ enum ContrastAnalyzer {
                 let rect = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale, height: frame.height * scale)
                 let name = "[system bar] " + String(label.prefix(60))
                 guard seen.insert("\(name)|\(Int(frame.minX))").inserted else { continue }
-                if let m = measure(image, pixelRect: rect, insetPixels: 2 * scale) {
+                if let m = measure(image, pixelRect: rect, insetPixels: 2 * scale, minInkRatio: 2.0) {
                     out.append(ContrastObservation(screen: screen, page: pageIndex, label: name,
                                                    classification: m.ratio >= threshold ? .pass : .inconclusive,
                                                    ratio: (m.ratio * 100).rounded() / 100, foreground: hex(m.foreground),
