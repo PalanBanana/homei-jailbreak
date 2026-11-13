@@ -88,3 +88,80 @@ jobs:
           test -f "$APP/Assets.car"
           echo "--- Info.plist"; plutil -p "$APP/Info.plist"
           echo "--- no IPA produced"; ! find build -name '*.ipa' | grep -q .
+
+  ui-tests:
+    # Runs the app on an iOS Simulator and checks what each screen says, what it must not offer,
+    # Korean text, the largest text size, and Apple's accessibility audit. Simulator only.
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install XcodeGen if it is not already available
+        run: |
+          if ! command -v xcodegen >/dev/null 2>&1; then
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: Generate the Xcode project
+        run: xcodegen generate --spec App/project.yml
+
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          xcrun simctl list devices available
+          SIM_ID="$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)["devices"]
+          phones = []
+          for runtime, devices in data.items():
+              for d in devices:
+                  if d["name"].startswith("iPhone") and "iOS" in runtime:
+                      phones.append((runtime, d["name"], d["udid"]))
+          phones.sort()
+          preferred = [p for p in phones if p[1] == "iPhone 17 Pro"] or phones
+          print(preferred[-1][2])
+          ')"
+          echo "Selected simulator: $SIM_ID"
+          xcrun simctl list devices available | grep "$SIM_ID" || true
+          echo "id=$SIM_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Run the UI tests (code signing disabled)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project App/HOMEI.xcodeproj \
+            -scheme HOMEI \
+            -destination "id=${{ steps.sim.outputs.id }}" \
+            -derivedDataPath build/DerivedData \
+            -resultBundlePath build/ui-tests.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee ui-test.log
+
+      - name: Export screenshots and accessibility audit results
+        if: always()
+        run: |
+          mkdir -p build/attachments
+          if [ -d build/ui-tests.xcresult ]; then
+            xcrun xcresulttool get test-results summary --path build/ui-tests.xcresult || true
+            xcrun xcresulttool export attachments --path build/ui-tests.xcresult --output-path build/attachments || true
+          fi
+          echo "--- accessibility audit records"
+          for f in build/attachments/*; do
+            [ -f "$f" ] || continue
+            if grep -q . "$f" 2>/dev/null && file "$f" | grep -qi 'text'; then echo "== $f"; cat "$f"; echo; fi
+          done | head -200
+          echo "--- exported files"; ls build/attachments | head -80
+
+      - name: Upload screenshots and audit records (simulator screenshots only, no build products)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ui-test-attachments
+          path: build/attachments
+          retention-days: 14
+          if-no-files-found: warn

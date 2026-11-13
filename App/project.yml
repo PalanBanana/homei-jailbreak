@@ -51,3 +51,23 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         # Deliberately empty entitlements: no capabilities, background modes or device access.
         CODE_SIGN_ENTITLEMENTS: Resources/HOMEI.entitlements
+  HOMEIUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ../Tests/UITests
+    dependencies:
+      - target: HOMEI
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.homei.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+schemes:
+  HOMEI:
+    build:
+      targets:
+        HOMEI: all
+    test:
+      targets:
+        - HOMEIUITests

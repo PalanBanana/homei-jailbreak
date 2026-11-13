@@ -37,7 +37,7 @@ REQUIRED_FILES = [
     "Docs/PRODUCT_DIFFERENTIATION.md", "Docs/PRODUCT_REQUIREMENTS.md", "Docs/DESIGN_SPEC.md",
     "App/Sources/HomeiApp.swift", "App/project.yml", "App/Resources/HOMEI.entitlements",
     "App/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json", "Tests/golden/parity-vectors.json",
-    "Tests/SwiftTests/ParityTests.swift", "scripts/check_contrast.py", "scripts/generate_app_icon.py",
+    "Tests/SwiftTests/ParityTests.swift", "Tests/UITests/HomeiUITests.swift", "deny.toml", "scripts/check_contrast.py", "scripts/generate_app_icon.py",
     ".github/workflows/swift-build.yml", "App/Resources/en.lproj/Localizable.strings",
     "App/Resources/ko.lproj/Localizable.strings", "App/Resources/Branding/homei-icon.svg",
     ".github/workflows/validate.yml", ".github/workflows/secret-scan.yml",
