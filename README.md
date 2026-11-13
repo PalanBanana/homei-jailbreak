@@ -10,13 +10,14 @@
 
 | Item | State |
 |---|---|
-| Version | 0.1.0 (initial foundation, not released) |
+| Version | 0.2.0 (native build milestone, not released) |
 | Target compatibility | **NOT ESTABLISHED** |
 | Readiness | LEVEL 0 / **NO-GO** |
 | Jailbreak backend | None |
-| Rust core, catalog, bootstrap simulation, CLI | Built and tested on the host (56 tests) |
-| Swift package and SwiftUI app | Written, **not compiled** (no Swift or Xcode in the development environment) |
-| iOS binary | **None built** |
+| Rust core, catalog, bootstrap simulation, CLI | Built and tested on the host (63 tests), dependency audit clean |
+| Swift package (`HomeiKit`) | Compiled and tested on macOS CI: 18 tests, including 8 Rust/Swift parity tests |
+| SwiftUI app | Builds for the iOS Simulator with code signing disabled (Xcode 26.6, SDK 26.5). 15 simulator UI tests pass |
+| iOS binary | Simulator `.app` only, built in CI. **No IPA, no device build, nothing run on a device** |
 
 ## 2. What HOMEI is
 
@@ -49,7 +50,7 @@ python3 -m pip install jsonschema && python3 scripts/validate_data.py
 cargo run -p homei-cli -- evaluate FIX-A
 ```
 
-The Swift sources and the iOS app need macOS with Xcode and have not been built. See [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md).
+The Swift package and the app build and test on macOS with Xcode. CI does this on every push, for the simulator only. See [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md) and [Docs/UI_ACCESSIBILITY_AUDIT.md](Docs/UI_ACCESSIBILITY_AUDIT.md).
 
 ## 7. Safety
 
@@ -61,7 +62,7 @@ Dopamine, Relaxin and unc0ver were inspected for high-level product practice onl
 
 ## 9. Documentation
 
-[Product requirements](Docs/PRODUCT_REQUIREMENTS.md) · [Architecture](Docs/ARCHITECTURE.md) · [Device compatibility](Docs/DEVICE_COMPATIBILITY.md) · [Safety](Docs/SAFETY.md) · [Recovery](Docs/RECOVERY.md) · [Design specification](Docs/DESIGN_SPEC.md) · [Development](Docs/DEVELOPMENT.md) · [Roadmap](Docs/ROADMAP.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Product requirements](Docs/PRODUCT_REQUIREMENTS.md) · [Architecture](Docs/ARCHITECTURE.md) · [Device compatibility](Docs/DEVICE_COMPATIBILITY.md) · [Safety](Docs/SAFETY.md) · [Recovery](Docs/RECOVERY.md) · [Design specification](Docs/DESIGN_SPEC.md) · [UI and accessibility audit](Docs/UI_ACCESSIBILITY_AUDIT.md) · [Development](Docs/DEVELOPMENT.md) · [Roadmap](Docs/ROADMAP.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 ## 10. License
 

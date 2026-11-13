@@ -30,7 +30,7 @@ Shows the provenance banner, the compatibility badge with the Research Only noti
 | textSecondary | 0.62, 0.70, 0.82 | Secondary text |
 | positive / caution / negative / neutral | green / amber / red / grey | Status |
 
-Contrast ratios were **not** measured. Verify them before release.
+Contrast was checked two ways. `scripts/check_contrast.py` computes WCAG ratios for every foreground and background pair the views draw, straight from `Theme.swift`: 27 of 27 pairs meet 4.5:1, and the thinnest is the negative-status badge text at 4.52:1. The simulator audit then measured the rendered text: see [UI_ACCESSIBILITY_AUDIT.md](UI_ACCESSIBILITY_AUDIT.md).
 
 ## Typography
 
@@ -48,11 +48,15 @@ System font with Dynamic Type. Headline for card titles, subheadline for body, f
 
 ## Accessibility
 
-Rows and cards combine into single accessibility elements, status badges expose a text label, icons are decorative beside text, and layout uses system scaling. VoiceOver and Dynamic Type behaviour has **not** been tested on a device or simulator.
+Rows and cards combine into single accessibility elements, status badges expose a text label, icons are decorative beside text, and layout uses system scaling. At accessibility text sizes a label and its value stack vertically instead of squeezing side by side. Card headings carry the header trait and are the real topic, package or finding names. Selectable rows are at least 44 pt tall and carry the selected trait.
+
+Verified in the simulator: all ten screens audited page by page for contrast and clipping, the largest accessibility text size, Korean text, and Apple's audit. VoiceOver itself, device behaviour, Increase Contrast, Reduce Transparency, iPad and landscape were **not** tested. Results and limits are in [UI_ACCESSIBILITY_AUDIT.md](UI_ACCESSIBILITY_AUDIT.md).
+
+Every screen says what kind of information it shows: the provenance banner on profile screens, a data-kind banner on Research and Package Catalog, and a legend on Device Information that lists observed data (none exists in this app), user-provided profile, synthetic fixture, verified research and unknown compatibility.
 
 ## Localisation
 
-English primary, Korean secondary, through `Localizable.strings` (91 keys each, checked for parity in CI). Research titles and explanations come from the English research tracker and are not translated.
+English primary, Korean secondary, through `Localizable.strings` (111 keys each, checked for parity in CI and by tests). Provenance labels are localised and a missing key falls back to a safe label, never a raw key. Research titles and explanations, recovery text, and compatibility explanations come from the English sources and are not translated yet.
 
 ## Branding
 

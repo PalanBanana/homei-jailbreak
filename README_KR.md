@@ -10,13 +10,14 @@
 
 | 항목 | 상태 |
 |---|---|
-| 버전 | 0.1.0 (초기 기반, 미출시) |
+| 버전 | 0.2.0 (네이티브 빌드 마일스톤, 미출시) |
 | 대상 호환성 | **확립되지 않음** |
 | 준비 수준 | LEVEL 0 / **NO-GO** |
 | 탈옥 백엔드 | 없음 |
-| Rust 코어, 카탈로그, 부트스트랩 시뮬레이션, CLI | 호스트에서 빌드 및 테스트 완료 (테스트 56개) |
-| Swift 패키지 및 SwiftUI 앱 | 작성됨, **컴파일하지 않음** (개발 환경에 Swift와 Xcode 없음) |
-| iOS 바이너리 | **빌드하지 않음** |
+| Rust 코어, 카탈로그, 부트스트랩 시뮬레이션, CLI | 호스트에서 빌드 및 테스트 완료 (테스트 63개), 의존성 감사 이상 없음 |
+| Swift 패키지 (`HomeiKit`) | macOS CI에서 컴파일 및 테스트 완료: 테스트 18개 (Rust/Swift 동등성 테스트 8개 포함) |
+| SwiftUI 앱 | 코드 서명을 끄고 iOS 시뮬레이터용으로 빌드됨 (Xcode 26.6, SDK 26.5). 시뮬레이터 UI 테스트 15개 통과 |
+| iOS 바이너리 | CI에서 만든 시뮬레이터 `.app`뿐입니다. **IPA 없음, 실제 기기용 빌드 없음, 기기에서 실행한 적 없음** |
 
 ## 2. HOMEI란
 
@@ -49,7 +50,7 @@ python3 -m pip install jsonschema && python3 scripts/validate_data.py
 cargo run -p homei-cli -- evaluate FIX-A
 ```
 
-Swift 소스와 iOS 앱은 Xcode가 있는 macOS가 필요하며 아직 빌드되지 않았습니다. [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md)를 참조하세요.
+Swift 패키지와 앱은 Xcode가 있는 macOS에서 빌드 및 테스트됩니다. CI가 푸시할 때마다 시뮬레이터 기준으로 수행합니다. [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md)와 [Docs/UI_ACCESSIBILITY_AUDIT.md](Docs/UI_ACCESSIBILITY_AUDIT.md)를 참조하세요.
 
 ## 7. 안전
 
@@ -61,7 +62,7 @@ Dopamine, Relaxin, unc0ver는 저장소 메타데이터, README, 디렉터리 �
 
 ## 9. 문서
 
-[제품 요구사항](Docs/PRODUCT_REQUIREMENTS.md) · [아키텍처](Docs/ARCHITECTURE.md) · [기기 호환성](Docs/DEVICE_COMPATIBILITY.md) · [안전](Docs/SAFETY.md) · [복구](Docs/RECOVERY.md) · [디자인 명세](Docs/DESIGN_SPEC.md) · [개발](Docs/DEVELOPMENT.md) · [로드맵](Docs/ROADMAP.md) · [서드파티 고지](THIRD_PARTY_NOTICES.md) · [기여](CONTRIBUTING.md) · [보안](SECURITY.md)
+[제품 요구사항](Docs/PRODUCT_REQUIREMENTS.md) · [아키텍처](Docs/ARCHITECTURE.md) · [기기 호환성](Docs/DEVICE_COMPATIBILITY.md) · [안전](Docs/SAFETY.md) · [복구](Docs/RECOVERY.md) · [디자인 명세](Docs/DESIGN_SPEC.md) · [UI 및 접근성 감사](Docs/UI_ACCESSIBILITY_AUDIT.md) · [개발](Docs/DEVELOPMENT.md) · [로드맵](Docs/ROADMAP.md) · [서드파티 고지](THIRD_PARTY_NOTICES.md) · [기여](CONTRIBUTING.md) · [보안](SECURITY.md)
 
 ## 10. 라이선스
 

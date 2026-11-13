@@ -37,11 +37,11 @@ Direct dependencies are `serde` and `serde_json`. The full resolved set, checked
 | unicode-ident | 1.0.27 | (MIT OR Apache-2.0) AND Unicode-3.0 |
 | zmij | 1.0.23 | MIT |
 
-`cargo-audit` and `cargo-deny` were not available when this list was made, so no vulnerability database check was run on these versions.
+`cargo audit` (1,509 advisories loaded) found no vulnerabilities in these 16 crates on 2026-11-13, and `cargo deny check` passes the licence, ban and source policy in `deny.toml`.
 
 ## Build tooling
 
-The GitHub Actions workflows use `actions/checkout`, `actions/setup-python` and `gitleaks/gitleaks-action`, pinned by commit. The Python validator uses `jsonschema`. These run in CI only and are not distributed.
+The GitHub Actions workflows use `actions/checkout`, `actions/setup-python`, `actions/upload-artifact` and `gitleaks/gitleaks-action`, pinned by commit. CI also uses XcodeGen (MIT, installed with Homebrew when the runner does not have it), `cargo-audit` and `cargo-deny` (pinned versions 0.23.0 and 0.20.2, both Apache-2.0 or MIT licensed). The Python validator uses `jsonschema`. The icon is rendered with librsvg and ImageMagick. These are build and test tools only and are not distributed.
 
 ## Trademarks
 

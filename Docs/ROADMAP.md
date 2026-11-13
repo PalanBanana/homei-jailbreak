@@ -2,19 +2,23 @@
 
 Nothing here is a promise. Items that depend on security research results are gated on evidence, not on a date.
 
-## 0.1.0 (this release): product foundation
+## 0.1.0: product foundation (done)
 
-Done: core logic, data schemas, safety gates, catalog and bootstrap simulation, SwiftUI sources, localisation, tests, CI.
+Core logic, data schemas, safety gates, catalog and bootstrap simulation, SwiftUI sources, localisation, tests, CI.
+
+## 0.2.0: native build and runtime foundation (done on `v0.2.0-native-build`, not released)
+
+The Swift code compiles and is tested on macOS CI, the app builds and runs its UI tests on the iOS Simulator, the icon set is generated, Rust/Swift parity is tested, and the dependency audit runs in CI.
 
 ## Next, safe engineering
 
-- Compile and test the Swift package and the app on a Mac with Xcode, and record the result.
-- Generate PNG icon sizes from the SVG source.
-- Add snapshot and accessibility tests for the interface.
-- Run `cargo audit` or `cargo deny` in CI.
+- Run VoiceOver in the simulator and record reading order and spoken output.
+- Test the sizes between default and the largest accessibility size, iPad and landscape, Increase Contrast and Reduce Transparency.
+- Identify the six Apple audit findings that have no addressable element.
+- Try the Swift 6 language mode.
+- Translate recovery and compatibility explanations into Korean.
 - Refresh `Data/` from the research tracker through a reviewed, reproducible script.
-- Add more fixtures (other product types) as the tracker establishes their SoC mapping.
-- Per-screen Korean translation of research text, with attribution to the English source.
+- Add more fixtures as the tracker establishes their SoC mapping.
 
 ## Gated on external research (not started)
 

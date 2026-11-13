@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "homei-bootstrap"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "homei-core",
  "serde",
@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "homei-catalog"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "homei-core",
  "serde",
@@ -22,7 +22,7 @@ dependencies = [
 
 [[package]]
 name = "homei-cli"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "homei-bootstrap",
  "homei-catalog",
@@ -31,7 +31,7 @@ dependencies = [
 
 [[package]]
 name = "homei-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -39,7 +39,7 @@ dependencies = [
 
 [[package]]
 name = "homei-tests"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "homei-bootstrap",
  "homei-catalog",
