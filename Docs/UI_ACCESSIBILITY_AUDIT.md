@@ -94,6 +94,25 @@ For the Recovery findings the element screenshots Apple attached show crisp, leg
 - Card headings were generic words repeated on every card ("Topic" seven times, "Package", "Finding"). They are now the real topic, package or finding names.
 - A scroll on a busy runner could be dropped and end an audit early. End detection now confirms the end and checks for text left under the tab bar.
 
+## Final run, on the code that is on the branch head
+
+The tables above describe the run on `eb16279`. After it, the Apple audit was split into a contrast part and an everything-else part (commit `fa7d63d`, corrected in `752fff4`). The run on `752fff4` (run 43441899249) is the last one, and its results were read from the log:
+
+| Item | Result |
+|---|---|
+| Swift package tests | 18 of 18 pass (5 engine, 8 Rust/Swift parity, 5 localisation) |
+| Simulator UI tests | 15 of 15 pass |
+| Xcode | `BUILD SUCCEEDED`, `TEST SUCCEEDED`, same toolchain as above |
+| Application text | 333 PASS, 0 FAIL, 0 OCCLUDED, 0 CLIPPED, 2 INCONCLUSIVE |
+| System-drawn bar text | PASS 44, INCONCLUSIVE 18, none failed |
+| Occlusion events across pages | 313 |
+| Screens that reached their end | all 13 |
+
+- Apple's contrast audit, run on its own, completed on every page and raised no findings. The eight overruled contrast findings of the earlier run did not recur. This does not show that those earlier findings were wrong, only that the separate audit did not repeat them.
+- One Apple finding was overruled: the Korean "Text clipped" report, for the same reason as before (no glyph pixel touches the frame boundary).
+- The two INCONCLUSIVE results are Apple findings it cannot attach to an element: "Potentially inaccessible text" on Package Catalog and on Research, 5 issues each. They are still unidentified.
+- No Apple audit part failed to complete in this run.
+
 ## Reliability of Apple's audit on the runner
 
 Apple's audit intermittently stopped with "Audit failed to complete in time" (code -56) when the hosted runner was under load. It happened on three occasions, on Bootstrap, Device and Research, each time on both of the two attempts the test allowed then and always on the first audit after a launch. Every other test of those runs passed, and the same screens passed their audits in other runs of the same code, so this is treated as runner load and not as an app defect.
