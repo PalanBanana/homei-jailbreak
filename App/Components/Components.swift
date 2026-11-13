@@ -35,12 +35,24 @@ struct StatusBadge: View {
 }
 
 struct SectionCard<Content: View>: View {
-    let titleKey: String
-    @ViewBuilder var content: Content
+    private let title: Text
+    private let content: Content
+
+    /// A card headed by a localised string.
+    init(titleKey: String, @ViewBuilder content: () -> Content) {
+        self.title = Text(LocalizedStringKey(titleKey))
+        self.content = content()
+    }
+
+    /// A card headed by text that is already final, such as a topic or package name.
+    init(verbatimTitle: String, @ViewBuilder content: () -> Content) {
+        self.title = Text(verbatim: verbatimTitle)
+        self.content = content()
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(LocalizedStringKey(titleKey)).font(.headline).foregroundStyle(Theme.textPrimary)
+            title.font(.headline).foregroundStyle(Theme.textPrimary)
                 .accessibilityAddTraits(.isHeader)
             content
         }

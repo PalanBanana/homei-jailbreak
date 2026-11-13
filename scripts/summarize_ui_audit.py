@@ -52,6 +52,7 @@ def main(argv: list[str]) -> int:
     raw_occlusions = 0
     problems = []
     limits = []
+    overruled = []
     lines = [f"{'screen':<22}{'pages':>6}" + "".join(f"{c:>14}" for c in CATEGORIES)]
     for rec in sorted(records, key=lambda r: r["screen"]):
         counts = Counter(o["classification"] for o in rec["final"])
@@ -64,6 +65,8 @@ def main(argv: list[str]) -> int:
                 problems.append(f"{o['classification']} {where}")
             elif o["classification"] in ("OCCLUDED", "INCONCLUSIVE"):
                 limits.append(f"{o['classification']} {where}")
+        for line in rec.get("appleOverruled", []):
+            overruled.append(f"APPLE-OVERRULED {rec['screen']}: {line}")
         for key, label in (("appleReported", "APPLE-AUDIT"), ("appleUnattributed", "APPLE-UNATTRIBUTED"),
                            ("appleInconclusive", "APPLE-INCONCLUSIVE")):
             for line in rec.get(key, []):
@@ -75,7 +78,9 @@ def main(argv: list[str]) -> int:
     out = ["UI contrast and accessibility audit", *lines, "",
            f"Raw occlusion events across pages (elements seen inside a bar or scroll-edge zone): {raw_occlusions}",
            f"Problems (fail the step): {len(problems)}", *[f"  {p}" for p in problems],
-           f"Limits (not passes, not failures): {len(limits)}", *[f"  {p}" for p in limits]]
+           f"Limits (not passes, not failures): {len(limits)}", *[f"  {p}" for p in limits],
+           f"Apple findings overruled by pixel evidence (recorded, not counted as defects): {len(overruled)}",
+           *[f"  {p}" for p in overruled]]
     text = "\n".join(out)
     print(text)
     summary = Path(__import__("os").environ.get("GITHUB_STEP_SUMMARY", ""))

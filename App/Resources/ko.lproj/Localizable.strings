@@ -17,7 +17,6 @@
 "catalog.license" = "라이선스";
 "catalog.metadata_only" = "메타데이터 전용입니다. 합성 테스트 항목이며 다운로드하거나 설치할 수 없습니다.";
 "catalog.not_installable" = "설치할 수 없음";
-"catalog.package" = "패키지";
 "catalog.source" = "출처";
 "catalog.title" = "패키지 카탈로그";
 "compat.cited_evidence" = "인용된 증거";
@@ -77,10 +76,8 @@
 "recovery.no_go" = "진행 / 중단 판단";
 "recovery.no_guarantee" = "백업이나 저장된 서명 티켓이 특정 빌드로의 복원을 보장하지는 않습니다.";
 "recovery.title" = "복구";
-"recovery.topic" = "주제";
 "recovery.uncertain" = "불확실";
 "research.confidence" = "신뢰도";
-"research.finding" = "조사 결과";
 "research.kind_banner" = "트래커의 공개 연구 자료입니다. 특정 휴대폰이 아니라 기기와 빌드 전반을 설명합니다.";
 "research.open_tracker" = "연구 트래커 열기";
 "research.scope" = "범위";

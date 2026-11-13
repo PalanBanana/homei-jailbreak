@@ -17,7 +17,6 @@
 "catalog.license" = "License";
 "catalog.metadata_only" = "Metadata only. These are synthetic test entries. Nothing can be downloaded or installed.";
 "catalog.not_installable" = "Not installable";
-"catalog.package" = "Package";
 "catalog.source" = "Source";
 "catalog.title" = "Package Catalog";
 "compat.cited_evidence" = "Cited evidence";
@@ -77,10 +76,8 @@
 "recovery.no_go" = "GO / NO-GO";
 "recovery.no_guarantee" = "A backup or a saved signing ticket does not guarantee that a device can be restored to a given build.";
 "recovery.title" = "Recovery";
-"recovery.topic" = "Topic";
 "recovery.uncertain" = "Uncertain";
 "research.confidence" = "Confidence";
-"research.finding" = "Finding";
 "research.kind_banner" = "Public research from the tracker. It describes devices and builds in general, not any phone.";
 "research.open_tracker" = "Open the research tracker";
 "research.scope" = "Scope";

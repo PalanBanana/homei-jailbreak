@@ -18,7 +18,7 @@ struct SecurityResearchView: View {
                     Text("state.empty_research").foregroundStyle(Theme.textSecondary)
                 }
                 ForEach(store.findings) { f in
-                    SectionCard(titleKey: "research.finding") {
+                    SectionCard(verbatimTitle: f.id) {
                         Text(f.title).font(.subheadline).foregroundStyle(Theme.textPrimary)
                         InfoRow(labelKey: "research.status", value: Bundle.main.localizedString(forKey: "finding.\(f.status.rawValue)", value: nil, table: nil))
                         InfoRow(labelKey: "research.scope", value: "\(f.hardwareScope) · \(f.firmwareScope)")

@@ -10,8 +10,7 @@ struct PackageCatalogView: View {
             Text("catalog.metadata_only").font(.subheadline).foregroundStyle(Theme.textSecondary)
             if let catalog = model.catalog {
                 ForEach(catalog.packages) { p in
-                    SectionCard(titleKey: "catalog.package") {
-                        Text("\(p.name) \(p.version)").font(.headline).foregroundStyle(Theme.textPrimary)
+                    SectionCard(verbatimTitle: "\(p.name) \(p.version)") {
                         Text(p.summary).font(.subheadline).foregroundStyle(Theme.textSecondary)
                         InfoRow(labelKey: "catalog.license", value: p.license)
                         InfoRow(labelKey: "catalog.source", value: p.sourceId)
@@ -89,8 +88,7 @@ struct RecoveryView: View {
                 }
             }
             ForEach(Recovery.topics) { t in
-                SectionCard(titleKey: "recovery.topic") {
-                    Text(t.title).font(.headline).foregroundStyle(Theme.textPrimary)
+                SectionCard(verbatimTitle: t.title) {
                     Text(t.body).font(.subheadline).foregroundStyle(Theme.textSecondary)
                     Text(t.documented ? "recovery.documented" : "recovery.uncertain").font(.caption).foregroundStyle(Theme.accent)
                 }

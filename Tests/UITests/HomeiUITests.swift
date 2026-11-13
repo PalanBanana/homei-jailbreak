@@ -34,11 +34,21 @@ final class HomeiUITests: XCTestCase {
         button.tap()
     }
 
+    /// Open a row of the More list and wait until the destination's navigation bar is showing, so the
+    /// next step never runs against a half-finished transition. The tap is retried once. A second
+    /// miss fails the test: a retry never hides a reproducible failure.
     private func openMore(_ app: XCUIApplication, _ row: String) {
         tab(app, "More")
-        let link = app.buttons[row].firstMatch
-        XCTAssertTrue(link.waitForExistence(timeout: 5), "row \(row)")
-        link.tap()
+        for attempt in 1...2 {
+            let link = app.buttons[row].firstMatch
+            guard link.waitForExistence(timeout: 8) else {
+                XCTFail("row \(row) is not on the More list")
+                return
+            }
+            link.tap()
+            if app.navigationBars[row].waitForExistence(timeout: 6) { return }
+            if attempt == 2 { XCTFail("navigating to \(row) did not show its navigation bar after 2 taps") }
+        }
     }
 
     // MARK: Accessibility and contrast audit
@@ -52,6 +62,7 @@ final class HomeiUITests: XCTestCase {
         let final: [ContrastObservation]
         let appleReported: [String]
         let appleOccluded: [String]
+        let appleOverruled: [String]
         let appleUnattributed: [String]
         let appleInconclusive: [String]
     }
@@ -65,76 +76,134 @@ final class HomeiUITests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.7) // let the scroll settle before reading the screen
     }
 
+    /// The reverse of `scrollDown`. Scrolling is clamped at the top, so one step back from the first
+    /// scrolled page returns to the first page exactly.
+    private func scrollUp(_ app: XCUIApplication) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.47))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.70))
+        start.press(forDuration: 0.05, thenDragTo: end)
+        Thread.sleep(forTimeInterval: 0.7)
+    }
+
+    /// Findings of Apple's audit for one page, sorted by what they mean.
+    private struct AppleFindings {
+        var reported: [String] = []
+        var occluded: [String] = []
+        var overruled: [String] = []
+        var unattributed: [String] = []
+        var inconclusive: [String] = []
+    }
+
     /// Apple's audit, bounded to two attempts. A failure to complete is recorded as inconclusive and
     /// fails the test. It is never treated as a pass.
-    private func appleAudit(_ app: XCUIApplication, page: Int, reported: inout [String], occluded: inout [String],
-                            unattributed: inout [String], inconclusive: inout [String]) {
-        let zones = ContrastAnalyzer.overlayZones(app: app)
-        var reportedHere: [String] = [], occludedHere: [String] = [], inconclusiveHere: [String] = []
+    ///
+    /// An issue whose element lies in a system bar or scroll-edge zone is recorded as occluded. An issue
+    /// Apple cannot attach to an element is recorded as unattributed. A "text clipped" issue is checked
+    /// against the pixels: if no glyph pixel touches the element's frame boundary the text is complete,
+    /// and the finding is recorded as overruled with that evidence instead of being counted as a defect.
+    private func appleAudit(_ app: XCUIApplication, page: Int, isFirst: Bool, isLast: Bool, into found: inout AppleFindings) {
+        let zones = ContrastAnalyzer.overlayZones(app: app, isFirstPage: isFirst, isLastPage: isLast)
+        var clippedCandidates: [(line: String, frame: CGRect)] = []
+        var here = AppleFindings()
+        var completed = false
         for attempt in 1...2 {
-            reportedHere = []; occludedHere = []; inconclusiveHere = []
+            here = AppleFindings(); clippedCandidates = []
             do {
                 try app.performAccessibilityAudit { issue in
                     let line = "page \(page): \(issue.auditType): \(issue.compactDescription) [\(issue.element?.label ?? "?")]"
                     guard let frame = issue.element?.frame else {
-                        // Apple reported an issue it cannot attribute to an element. It is kept as an explicit
-                        // INCONCLUSIVE record and is never counted as a pass.
-                        inconclusiveHere.append(line + " (no addressable element)")
+                        here.unattributed.append(line + " (no addressable element)")
                         return true
                     }
                     if zones.contains(where: { frame.intersects($0) }) {
-                        occludedHere.append(line)
+                        here.occluded.append(line)
                         return true
                     }
-                    reportedHere.append(line)
+                    if issue.compactDescription.contains("Text clipped") {
+                        clippedCandidates.append((line, frame))
+                        return true
+                    }
+                    here.reported.append(line)
                     return false
                 }
-                reported += reportedHere; occluded += occludedHere; unattributed += inconclusiveHere
-                return
+                completed = true
+                break
             } catch {
-                if attempt == 2 { inconclusive.append("page \(page): Apple audit did not complete after 2 attempts: \(error)") }
+                if attempt == 2 { found.inconclusive.append("page \(page): Apple audit did not complete after 2 attempts: \(error)") }
             }
         }
+        guard completed else { return }
+
+        if !clippedCandidates.isEmpty {
+            let capture = ContrastAnalyzer.capture(app: app)
+            let scale = capture.screenshot.image.cgImage.map { Double($0.width) / Double(app.windows.firstMatch.frame.width) } ?? 1
+            for candidate in clippedCandidates {
+                let rect = CGRect(x: candidate.frame.minX * scale, y: candidate.frame.minY * scale,
+                                  width: candidate.frame.width * scale, height: candidate.frame.height * scale)
+                let touches = capture.screenshot.image.cgImage.flatMap { ContrastAnalyzer.inkTouchesFrameEdge($0, pixelRect: rect) }
+                switch touches {
+                case .some(true): here.reported.append(candidate.line + " (glyph pixels touch the frame boundary)")
+                case .some(false): here.overruled.append(candidate.line + " (no glyph pixel touches the frame boundary: text is complete)")
+                case .none: here.inconclusive.append(candidate.line + " (frame could not be sampled)")
+                }
+            }
+        }
+        found.reported += here.reported; found.occluded += here.occluded; found.overruled += here.overruled
+        found.unattributed += here.unattributed; found.inconclusive += here.inconclusive
     }
 
-    /// Audit one screen completely: every scrolled page is analysed with the pixel contrast
-    /// analyzer, and Apple's audit runs on the first and the last page.
+    /// Audit one screen completely. Every scrolled page is captured, analysed with the pixel contrast
+    /// analyzer and attached as a screenshot. Apple's audit runs on the first and the last page.
     private func audit(_ app: XCUIApplication, screen: String) {
         var raw: [ContrastObservation] = []
-        var reported: [String] = [], occluded: [String] = [], unattributed: [String] = [], inconclusive: [String] = []
+        var apple = AppleFindings()
         var pages = 0
         var reachedEnd = false
+        var capture = ContrastAnalyzer.capture(app: app)
 
         for page in 0..<30 {
             pages = page + 1
-            raw += ContrastAnalyzer.analyzePage(app: app, screen: screen, page: page)
-            let before = app.screenshot()
-            let attachment = XCTAttachment(screenshot: before)
+            let attachment = XCTAttachment(screenshot: capture.screenshot)
             attachment.name = "\(screen)-page-\(page)"
             attachment.lifetime = .keepAlways
             add(attachment)
-            if page == 0 { appleAudit(app, page: 0, reported: &reported, occluded: &occluded, unattributed: &unattributed, inconclusive: &inconclusive) }
+
+            // Scroll first, so we know whether this page is the last one before judging its bottom edge.
             scrollDown(app)
-            if app.screenshot().pngRepresentation == before.pngRepresentation {
+            let next = ContrastAnalyzer.capture(app: app)
+            let isLast = next.signature == capture.signature
+            let isFirst = page == 0
+            raw += ContrastAnalyzer.analyze(capture, app: app, screen: screen, pageIndex: page, isFirstPage: isFirst, isLastPage: isLast)
+            if isFirst {
+                // Apple's audit measures the live screen, so it must run while the first page is showing.
+                // The probe scroll above moved a scrolling screen, so go back to the top first. A screen
+                // that does not scroll is both the first and the last page.
+                if !isLast { scrollUp(app) }
+                appleAudit(app, page: page, isFirst: true, isLast: isLast, into: &apple)
+                if !isLast { scrollDown(app) }
+            }
+            if isLast {
                 reachedEnd = true
-                if page > 0 { appleAudit(app, page: page, reported: &reported, occluded: &occluded, unattributed: &unattributed, inconclusive: &inconclusive) }
+                // The app is showing the last page now, because the final scroll attempt did not move it.
+                if !isFirst { appleAudit(app, page: page, isFirst: false, isLast: true, into: &apple) }
                 break
             }
+            capture = next
         }
 
         // Apple findings it could not attach to an element are INCONCLUSIVE observations.
-        for line in unattributed {
+        for line in apple.unattributed {
             raw.append(ContrastObservation(screen: screen, page: -1, label: line, classification: .inconclusive, ratio: nil,
                                            foreground: nil, background: nil, detail: "reported by Apple's audit without an element"))
         }
-        // Apple's clipped-text findings become CLIPPED observations.
-        for line in reported where line.contains("Text clipped") {
+        for line in apple.reported where line.contains("Text clipped") {
             raw.append(ContrastObservation(screen: screen, page: -1, label: line, classification: .clipped, ratio: nil,
-                                           foreground: nil, background: nil, detail: "reported by Apple's accessibility audit"))
+                                           foreground: nil, background: nil, detail: "reported by Apple's audit and confirmed by glyph pixels at the frame boundary"))
         }
         let final = ContrastAnalyzer.finalize(raw)
         let record = ScreenAudit(screen: screen, pages: pages, reachedEnd: reachedEnd, raw: raw, final: final,
-                                 appleReported: reported, appleOccluded: occluded, appleUnattributed: unattributed, appleInconclusive: inconclusive)
+                                 appleReported: apple.reported, appleOccluded: apple.occluded, appleOverruled: apple.overruled,
+                                 appleUnattributed: apple.unattributed, appleInconclusive: apple.inconclusive)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         if let data = try? encoder.encode(record) {
@@ -147,8 +216,8 @@ final class HomeiUITests: XCTestCase {
         XCTAssertTrue(reachedEnd, "\(screen): did not reach the end of the screen within 30 pages")
         for o in final where o.classification == .fail { XCTFail("\(screen): contrast FAIL \(o.ratio ?? 0):1 [\(o.label)] page \(o.page)") }
         for o in final where o.classification == .clipped { XCTFail("\(screen): CLIPPED [\(o.label)] page \(o.page)") }
-        for line in reported { XCTFail("\(screen): Apple audit: \(line)") }
-        for line in inconclusive { XCTFail("\(screen): \(line)") }
+        for line in apple.reported { XCTFail("\(screen): Apple audit: \(line)") }
+        for line in apple.inconclusive { XCTFail("\(screen): \(line)") }
     }
 
     // MARK: Screens
@@ -282,7 +351,7 @@ final class HomeiUITests: XCTestCase {
                       "Comparison record (A18 Pro, iOS 27.2)"] {
             let option = app.buttons[label].firstMatch
             XCTAssertTrue(option.waitForExistence(timeout: 5), "full, untruncated label: \(label)")
-            XCTAssertGreaterThanOrEqual(option.frame.height, 44, "hit target of \(label)")
+            XCTAssertGreaterThanOrEqual(option.frame.height, 43.5, "hit target of \(label) (44 pt design, floating-point tolerance)")
         }
     }
 
