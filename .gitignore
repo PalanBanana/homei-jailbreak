@@ -1,0 +1,44 @@
+# Build output
+target/
+.build/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Device artefacts and secrets. None of these may ever be committed.
+*.ipa
+*.tipa
+*.ipsw
+*.im4p
+*.kc
+*.kernelcache
+*.sysdiagnose
+*.tar.gz
+*.mobiledevicepairing
+*.plist.pairing
+*.p12
+*.pem
+*.key
+*.mobileprovision
+*.env
+.env*
+pairing/
+lockdown/
+device-identification/
+sysdiagnose*/
+backups/
+*.ghidra
+*.gpr
+*.rep/
+
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

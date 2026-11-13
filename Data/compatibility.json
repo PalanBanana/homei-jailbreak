@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "note": "Compatibility declarations. A positive state needs exact-device, exact-build evidence of class target_compatible_result and, for 'supported', independent_reproduction. None exists for any record below.",
+  "declarations": [
+    {
+      "id": "HC-001",
+      "product_type": "iPhone16,2",
+      "soc_family": "A17 Pro",
+      "product_version": "27.0.1",
+      "build_version": "24A446",
+      "architecture": "arm64e",
+      "status": "not_established",
+      "evidence_ids": ["EV-002", "EV-008", "EV-009"],
+      "note": "No verified jailbreak result exists for this device and build. The cited evidence is an identifier mapping and two statements that no complete chain or installable tool is verified. A reported demonstration used a different device and chip (EV-001)."
+    },
+    {
+      "id": "HC-002",
+      "product_type": "iPhone18,1",
+      "soc_family": "A19 Pro",
+      "product_version": "27.0.1",
+      "build_version": "24A446",
+      "architecture": null,
+      "status": "not_established",
+      "evidence_ids": [],
+      "note": "Test comparison record. Only manifest-level metadata was compared in the research tracker. No compatibility evidence exists."
+    },
+    {
+      "id": "HC-003",
+      "product_type": "iPhone17,2",
+      "soc_family": "A18 Pro",
+      "product_version": "27.2",
+      "build_version": "24B119",
+      "architecture": null,
+      "status": "not_established",
+      "evidence_ids": [],
+      "note": "Test comparison record. Only manifest-level metadata was compared in the research tracker. No compatibility evidence exists."
+    }
+  ]
+}

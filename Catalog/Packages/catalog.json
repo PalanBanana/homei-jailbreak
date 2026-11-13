@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "note": "Offline catalog of synthetic test packages. They are descriptions only. No package is downloadable or installable, and the digests are placeholders.",
+  "packages": [
+    {
+      "id": "homei.fixture.core-lib",
+      "name": "Fixture Core Library",
+      "version": "1.0.0",
+      "summary": "Synthetic library record used to test dependency summaries.",
+      "source_id": "SRC-FIXTURE",
+      "license": "MIT",
+      "compatibility": [
+        { "product_type": "iPhone16,2", "product_version": "27.0.1", "status": "not_established" }
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      "dependencies": [],
+      "fixture": true
+    },
+    {
+      "id": "homei.fixture.sample-theme",
+      "name": "Fixture Sample Theme",
+      "version": "0.2.1",
+      "summary": "Synthetic interface-theme record. Has no files.",
+      "source_id": "SRC-FIXTURE",
+      "license": "MIT",
+      "compatibility": [
+        { "product_type": "iPhone16,2", "product_version": "27.0.1", "status": "not_established" }
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      "dependencies": ["homei.fixture.core-lib"],
+      "fixture": true
+    },
+    {
+      "id": "homei.fixture.sample-tool",
+      "name": "Fixture Sample Tool",
+      "version": "0.1.0",
+      "summary": "Synthetic command-line tool record used to test transitive dependency summaries.",
+      "source_id": "SRC-FIXTURE",
+      "license": "MIT",
+      "compatibility": [
+        { "product_type": "iPhone16,2", "product_version": "27.0.1", "status": "not_established" }
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      "dependencies": ["homei.fixture.sample-theme", "homei.fixture.core-lib"],
+      "fixture": true
+    }
+  ]
+}

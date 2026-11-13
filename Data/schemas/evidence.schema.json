@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HOMEI evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "tracker_repository": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "tracker_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "note": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^EV-\\d{3}$"
+          },
+          "tracker_claim_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^C-\\d{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "class": {
+            "enum": [
+              "confirmed_device_metadata",
+              "public_source_statement",
+              "official_apple_documentation",
+              "static_binary_observation",
+              "reported_runtime_result",
+              "independent_reproduction",
+              "target_compatible_result",
+              "unverified",
+              "unknown"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "product_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "product_version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "build_version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "soc_family": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "product_type",
+              "product_version",
+              "build_version",
+              "soc_family"
+            ]
+          },
+          "source_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^https://"
+            }
+          },
+          "publication_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "access_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "limitations": {
+            "type": "string"
+          },
+          "contradicting_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tracker_claim_id",
+          "title",
+          "class",
+          "scope",
+          "source_urls",
+          "publication_date",
+          "access_date",
+          "confidence",
+          "limitations",
+          "contradicting_ids"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "tracker_repository",
+    "tracker_commit",
+    "snapshot_date",
+    "note",
+    "evidence"
+  ]
+}

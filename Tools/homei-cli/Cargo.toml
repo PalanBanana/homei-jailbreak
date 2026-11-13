@@ -1,0 +1,20 @@
+[package]
+name = "homei-cli"
+description = "Host-side command line view of the HOMEI core. Reads bundled data only."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "homei"
+path = "src/main.rs"
+
+[dependencies]
+homei-core.workspace = true
+homei-catalog.workspace = true
+homei-bootstrap.workspace = true
+
+[lints]
+workspace = true

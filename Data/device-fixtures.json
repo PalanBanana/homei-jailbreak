@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "note": "Synthetic test records. They are not connected devices and carry no identifiers. Fixture A uses the public research target profile of the research tracker; the architecture is the arm64e subtype recorded for the 24A446 firmware images (tracker claim C-096).",
+  "fixtures": [
+    {
+      "id": "FIX-A",
+      "label": "Research target (A17 Pro)",
+      "profile": {
+        "product_type": "iPhone16,2",
+        "product_version": "27.0.1",
+        "build_version": "24A446",
+        "device_class": null,
+        "hardware_model": null,
+        "cpu_architecture": "arm64e",
+        "provenance": "test_fixture"
+      }
+    },
+    {
+      "id": "FIX-B",
+      "label": "Comparison record (A19 Pro, same version and build)",
+      "profile": {
+        "product_type": "iPhone18,1",
+        "product_version": "27.0.1",
+        "build_version": "24A446",
+        "device_class": null,
+        "hardware_model": null,
+        "cpu_architecture": null,
+        "provenance": "test_fixture"
+      }
+    },
+    {
+      "id": "FIX-C",
+      "label": "Comparison record (A18 Pro, iOS 27.2)",
+      "profile": {
+        "product_type": "iPhone17,2",
+        "product_version": "27.2",
+        "build_version": "24B119",
+        "device_class": null,
+        "hardware_model": null,
+        "cpu_architecture": null,
+        "provenance": "test_fixture"
+      }
+    }
+  ]
+}

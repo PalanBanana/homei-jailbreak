@@ -1,0 +1,45 @@
+[package]
+name = "homei-tests"
+description = "HOMEI test suites: unit, compatibility, safety and fixture tests."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+homei-core.workspace = true
+homei-catalog.workspace = true
+homei-bootstrap.workspace = true
+serde_json.workspace = true
+
+[[test]]
+name = "unit_device_profile"
+path = "UnitTests/device_profile.rs"
+
+[[test]]
+name = "unit_safety_recovery"
+path = "UnitTests/safety_recovery.rs"
+
+[[test]]
+name = "compatibility_engine"
+path = "CompatibilityTests/engine.rs"
+
+[[test]]
+name = "safety_gates"
+path = "SafetyTests/gates.rs"
+
+[[test]]
+name = "safety_source_hygiene"
+path = "SafetyTests/source_hygiene.rs"
+
+[[test]]
+name = "fixture_bundle"
+path = "FixtureTests/bundle.rs"
+
+[[test]]
+name = "fixture_catalog_bootstrap"
+path = "FixtureTests/catalog_bootstrap.rs"
+
+[lints]
+workspace = true

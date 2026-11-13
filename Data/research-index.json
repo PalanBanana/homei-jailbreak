@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "tracker_repository": "https://github.com/PalanBanana/ios27-a17pro-jailbreak-tracker",
+  "tracker_commit": "c16b401",
+  "snapshot_date": "2026-11-12",
+  "note": "Sanitized public research metadata derived from the tracker. The tracker is the source of truth. Claim titles are reproduced with attribution (MIT / CC BY 4.0).",
+  "findings": [
+    {
+      "id": "RF-001",
+      "title": "The reported demonstration device (iPhone 18 Pro) uses A20 Pro, so the demonstration is not direct evidence for A17 Pro",
+      "status": "verified",
+      "evidence_ids": [
+        "EV-001"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "A20 Pro (reported demonstration device)",
+      "firmware_scope": "not stated",
+      "tracker_claim_id": "C-002",
+      "last_checked": "2026-11-11",
+      "confidence": "high"
+    },
+    {
+      "id": "RF-002",
+      "title": "iOS 27.0.1 build 24A446 is the build for iPhone16,2 (iPhone 15 Pro Max)",
+      "status": "partially_verified",
+      "evidence_ids": [
+        "EV-002"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone16,2",
+      "firmware_scope": "27.0.1 / 24A446",
+      "tracker_claim_id": "C-003",
+      "last_checked": "2026-11-12",
+      "confidence": "medium"
+    },
+    {
+      "id": "RF-003",
+      "title": "iOS 27.0.1 has no published CVE entries in Apple's security releases index",
+      "status": "verified",
+      "evidence_ids": [
+        "EV-003"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone (all models in Apple index)",
+      "firmware_scope": "27.0.1",
+      "tracker_claim_id": "C-007",
+      "last_checked": "2026-11-12",
+      "confidence": "high"
+    },
+    {
+      "id": "RF-004",
+      "title": "Dopamine 3.0 release notes state a Titan PPL/SPTM bypass for all devices on iOS 16.5.1 to 17.3.1",
+      "status": "verified",
+      "evidence_ids": [
+        "EV-004"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "A15 to A17",
+      "firmware_scope": "16.5.1 - 17.3.1",
+      "tracker_claim_id": "C-016",
+      "last_checked": "2026-11-12",
+      "confidence": "high"
+    },
+    {
+      "id": "RF-005",
+      "title": "iOS 27.0.1 (24A446) is unsigned in the ipsw.me index on 2026-11-12, after a 2026-11-02 report that it was signed",
+      "status": "unverified",
+      "evidence_ids": [
+        "EV-005"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone16,2",
+      "firmware_scope": "27.0.1 / 24A446",
+      "tracker_claim_id": "C-021",
+      "last_checked": "2026-11-12",
+      "confidence": "low"
+    },
+    {
+      "id": "RF-006",
+      "title": "The device identifier iPhone16,2 corresponds to the iPhone 15 Pro Max",
+      "status": "partially_verified",
+      "evidence_ids": [
+        "EV-006"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone16,2",
+      "firmware_scope": "n/a",
+      "tracker_claim_id": "C-025",
+      "last_checked": "2026-11-12",
+      "confidence": "medium"
+    },
+    {
+      "id": "RF-007",
+      "title": "The iPhone 15 Pro Max uses the Apple A17 Pro chip",
+      "status": "partially_verified",
+      "evidence_ids": [
+        "EV-007"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "A17 Pro",
+      "firmware_scope": "n/a",
+      "tracker_claim_id": "C-026",
+      "last_checked": "2026-11-11",
+      "confidence": "medium"
+    },
+    {
+      "id": "RF-008",
+      "title": "No public complete exploit chain applicable to iPhone 15 Pro Max on iOS 27.0.1 has been verified",
+      "status": "partially_verified",
+      "evidence_ids": [
+        "EV-008"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone16,2 / A17 Pro",
+      "firmware_scope": "27.0.1 / 24A446",
+      "tracker_claim_id": "C-027",
+      "last_checked": "2026-11-11",
+      "confidence": "medium"
+    },
+    {
+      "id": "RF-009",
+      "title": "No publicly installable jailbreak tool is verified for iOS 27.0.1 on A17 Pro",
+      "status": "partially_verified",
+      "evidence_ids": [
+        "EV-009"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "iPhone16,2 / A17 Pro",
+      "firmware_scope": "27.0.1 / 24A446",
+      "tracker_claim_id": "C-028",
+      "last_checked": "2026-11-11",
+      "confidence": "medium"
+    },
+    {
+      "id": "RF-010",
+      "title": "The kernelcache and the SPTM and TXM monitor images of 24A446 carry the arm64e subtype bit in their Mach-O headers",
+      "status": "verified",
+      "evidence_ids": [
+        "EV-010"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "A17 Pro firmware images",
+      "firmware_scope": "27.0.1 / 24A446",
+      "tracker_claim_id": "C-096",
+      "last_checked": "2026-11-12",
+      "confidence": "high"
+    },
+    {
+      "id": "RF-011",
+      "title": "The default-branch README of the Dopamine repository lists rootless ranges to iOS 17.3.1 (arm64e) and 18.7.1 (arm64), and no iOS 27 range",
+      "status": "verified",
+      "evidence_ids": [
+        "EV-011"
+      ],
+      "cve_ids": [],
+      "hardware_scope": "arm64e devices per upstream README",
+      "firmware_scope": "up to iOS 17.3.1; no iOS 27 range",
+      "tracker_claim_id": "C-133",
+      "last_checked": "2026-11-12",
+      "confidence": "high"
+    }
+  ]
+}

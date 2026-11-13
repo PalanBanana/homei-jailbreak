@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HOMEI device fixtures",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "note": {
+      "type": "string"
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^FIX-[A-Z]$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "product_type": {
+                "type": "string",
+                "pattern": "^[A-Za-z]+\\d{1,3},\\d{1,3}$"
+              },
+              "product_version": {
+                "type": "string",
+                "pattern": "^\\d{1,3}(\\.\\d{1,3}){1,2}$"
+              },
+              "build_version": {
+                "type": "string",
+                "pattern": "^\\d{1,3}[A-Z]\\d{1,5}[a-z]?$"
+              },
+              "device_class": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 32
+              },
+              "hardware_model": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 32
+              },
+              "cpu_architecture": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 32
+              },
+              "provenance": {
+                "enum": [
+                  "manual_profile",
+                  "test_fixture",
+                  "user_authorized_read_only_observation",
+                  "public_firmware_metadata"
+                ]
+              }
+            },
+            "required": [
+              "product_type",
+              "product_version",
+              "build_version",
+              "device_class",
+              "hardware_model",
+              "cpu_architecture",
+              "provenance"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "profile"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "note",
+    "fixtures"
+  ]
+}

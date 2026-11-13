@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HOMEI catalog sources",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "note": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SRC-[A-Z0-9-]+$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://"
+          },
+          "trust": {
+            "enum": [
+              "test_fixture",
+              "untrusted_unverified"
+            ]
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "trust",
+          "attribution",
+          "license"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "note",
+    "sources"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "note": "Package sources known to the catalog. Only the bundled test-fixture source exists. No external source is trusted or contacted.",
+  "sources": [
+    {
+      "id": "SRC-FIXTURE",
+      "name": "HOMEI test fixtures",
+      "url": null,
+      "trust": "test_fixture",
+      "attribution": "Written for HOMEI tests. Not real software.",
+      "license": "MIT"
+    }
+  ]
+}

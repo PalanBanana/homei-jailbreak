@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HOMEI compatibility declarations",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "note": {
+      "type": "string"
+    },
+    "declarations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^HC-\\d{3}$"
+          },
+          "product_type": {
+            "type": "string"
+          },
+          "soc_family": {
+            "type": "string"
+          },
+          "product_version": {
+            "type": "string"
+          },
+          "build_version": {
+            "type": "string"
+          },
+          "architecture": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "partially_supported",
+              "not_established",
+              "unknown"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^EV-\\d{3}$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "product_type",
+          "soc_family",
+          "product_version",
+          "build_version",
+          "architecture",
+          "status",
+          "evidence_ids",
+          "note"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "note",
+    "declarations"
+  ]
+}

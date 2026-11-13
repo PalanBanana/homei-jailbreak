@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+members = ["Core", "Catalog", "Bootstrap", "Tools/homei-cli", "Tests"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/PalanBanana/homei-jailbreak"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+homei-core = { path = "Core" }
+homei-catalog = { path = "Catalog" }
+homei-bootstrap = { path = "Bootstrap" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
