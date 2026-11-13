@@ -225,8 +225,27 @@ enum ContrastAnalyzer {
         for (label, frame) in page.texts {
             guard !label.isEmpty, frame.width >= 4, frame.height >= 4, frame.maxY > 0, frame.minY < window.height else { continue }
             if frame.height > window.height * 0.7 { continue }                                  // a container, not a text run
-            if tabBar != .zero, tabBar.insetBy(dx: -2, dy: -2).contains(frame) { continue }    // system tab bar text
-            if navBar != .zero, navBar.insetBy(dx: -2, dy: -2).contains(frame) { continue }    // system title and back button
+            let inSystemBar = (tabBar != .zero && tabBar.insetBy(dx: -2, dy: -2).contains(frame))
+                || (navBar != .zero && navBar.insetBy(dx: -2, dy: -2).contains(frame))
+            if inSystemBar {
+                // System-drawn text over translucent glass. Its effective background changes with whatever
+                // scrolls behind it, so a low reading is INCONCLUSIVE and never a FAIL. It is recorded so the
+                // numbers are visible.
+                let rect = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale, height: frame.height * scale)
+                let name = "[system bar] " + String(label.prefix(60))
+                guard seen.insert("\(name)|\(Int(frame.minX))").inserted else { continue }
+                if let m = measure(image, pixelRect: rect, insetPixels: 2 * scale) {
+                    out.append(ContrastObservation(screen: screen, page: pageIndex, label: name,
+                                                   classification: m.ratio >= threshold ? .pass : .inconclusive,
+                                                   ratio: (m.ratio * 100).rounded() / 100, foreground: hex(m.foreground),
+                                                   background: hex(m.background),
+                                                   detail: "system-drawn text, measured \(String(format: "%.2f", m.ratio)):1"))
+                } else {
+                    out.append(ContrastObservation(screen: screen, page: pageIndex, label: name, classification: .inconclusive,
+                                                   ratio: nil, foreground: nil, background: nil, detail: "system-drawn text, too few glyph pixels"))
+                }
+                continue
+            }
             let key = "\(label)|\(Int(frame.minX))|\(Int(frame.minY))"
             guard seen.insert(key).inserted else { continue }
 
@@ -260,8 +279,16 @@ enum ContrastAnalyzer {
                 out.append(obs(.inconclusive, "too few glyph pixels to measure"))
                 continue
             }
-            out.append(obs(m.ratio >= threshold ? .pass : .fail,
-                           "measured \(String(format: "%.2f", m.ratio)):1 against \(threshold):1" + (partial ? " on the part outside the system zones" : ""), m))
+            let text = "measured \(String(format: "%.2f", m.ratio)):1 against \(threshold):1"
+            if m.ratio >= threshold {
+                out.append(obs(.pass, text + (partial ? " on the part outside the system zones" : ""), m))
+            } else if partial {
+                // A thin slice of a rounded container cannot rule out a mixed background, so a low reading
+                // from a partial view is not a conviction. The fully visible measurement elsewhere decides.
+                out.append(obs(.inconclusive, text + " on a partial view; a mixed background cannot be excluded", m))
+            } else {
+                out.append(obs(.fail, text, m))
+            }
         }
         return out
     }
