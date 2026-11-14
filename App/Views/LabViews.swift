@@ -109,42 +109,56 @@ struct LabScreen<Content: View>: View {
 // MARK: 1. Overview
 
 struct LabHomeView: View {
-    @EnvironmentObject var model: AppModel
-
     var body: some View {
-        List {
-            if let lab = model.lab {
-                Section {
-                    DataKindBanner(textKey: "lab.banner", symbol: "cube.transparent")
-                    LabStatusBadge.vm(lab.fidelity.vmStatus)
-                    Text(LocalizedStringKey(lab.fidelity.vmStatus.detailLocalizationKey))
-                        .font(.footnote).foregroundStyle(Theme.textSecondary)
-                    InfoRow(labelKey: "lab.target", value: "\(lab.target.productType) · \(lab.target.osVersion) (\(lab.target.buildVersion))")
-                    InfoRow(labelKey: "lab.exact_vm", value: LabText.yesNo(lab.claimsExactTargetVM))
-                    InfoRow(labelKey: "lab.vm_running", value: LabText.yesNo(lab.guest.vmRunning))
-                    InfoRow(labelKey: "lab.generated_on", value: lab.generatedOn)
-                }
-                .listRowBackground(Theme.surface)
-                Section {
-                    NavigationLink("lab.nav.target") { LabTargetView() }
-                    NavigationLink("lab.nav.backend") { LabBackendView() }
-                    NavigationLink("lab.nav.firmware") { LabFirmwareView() }
-                    NavigationLink("lab.nav.ghidra") { LabGhidraView() }
-                    NavigationLink("lab.nav.guest") { LabGuestView() }
-                    NavigationLink("lab.nav.packages") { LabPackagesView() }
-                    NavigationLink("lab.nav.bootstrap") { LabBootstrapView() }
-                    NavigationLink("lab.nav.experiments") { LabExperimentsView() }
-                    NavigationLink("lab.nav.fidelity") { LabFidelityView() }
-                }
-                .listRowBackground(Theme.surface)
-            } else {
-                LabUnavailableView().listRowBackground(Color.clear)
+        LabScreen(titleKey: "lab.title") { lab in
+            DataKindBanner(textKey: "lab.banner", symbol: "cube.transparent")
+            LabStatusBadge.vm(lab.fidelity.vmStatus)
+            Text(LocalizedStringKey(lab.fidelity.vmStatus.detailLocalizationKey))
+                .font(.footnote).foregroundStyle(Theme.textSecondary).fixedSize(horizontal: false, vertical: true)
+            SectionCard(titleKey: "lab.overview") {
+                InfoRow(labelKey: "lab.target", value: "\(lab.target.productType) · \(lab.target.osVersion) (\(lab.target.buildVersion))")
+                InfoRow(labelKey: "lab.exact_vm", value: LabText.yesNo(lab.claimsExactTargetVM))
+                InfoRow(labelKey: "lab.vm_running", value: LabText.yesNo(lab.guest.vmRunning))
+                InfoRow(labelKey: "lab.generated_on", value: lab.generatedOn)
+            }
+            SectionCard(titleKey: "lab.screens") {
+                LabLinkRow(titleKey: "lab.nav.target") { LabTargetView() }
+                LabLinkRow(titleKey: "lab.nav.backend") { LabBackendView() }
+                LabLinkRow(titleKey: "lab.nav.firmware") { LabFirmwareView() }
+                LabLinkRow(titleKey: "lab.nav.ghidra") { LabGhidraView() }
+                LabLinkRow(titleKey: "lab.nav.guest") { LabGuestView() }
+                LabLinkRow(titleKey: "lab.nav.packages") { LabPackagesView() }
+                LabLinkRow(titleKey: "lab.nav.bootstrap") { LabBootstrapView() }
+                LabLinkRow(titleKey: "lab.nav.experiments") { LabExperimentsView() }
+                LabLinkRow(titleKey: "lab.nav.fidelity") { LabFidelityView() }
             }
         }
-        .scrollContentBackground(.hidden)
-        .background(Theme.background)
-        .navigationTitle("lab.title")
-        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+/// A navigation row with a 44 pt hit target. Text and chevron keep their own explicit colours.
+struct LabLinkRow<Destination: View>: View {
+    let titleKey: String
+    let destination: () -> Destination
+
+    init(titleKey: String, @ViewBuilder destination: @escaping () -> Destination) {
+        self.titleKey = titleKey
+        self.destination = destination
+    }
+
+    var body: some View {
+        NavigationLink {
+            destination()
+        } label: {
+            HStack {
+                Text(LocalizedStringKey(titleKey)).foregroundStyle(Theme.textPrimary)
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right").foregroundStyle(Theme.textSecondary).accessibilityHidden(true)
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -224,7 +238,7 @@ struct LabBackendView: View {
             }
             SectionCard(titleKey: "lab.backend.host") {
                 InfoRow(labelKey: "lab.backend.host_system", value: "\(lab.host.distribution) \(lab.host.architecture)")
-                InfoRow(labelKey: "lab.backend.qemu", value: lab.host.qemuVersion ?? LabText.loc("lab.unknown"))
+                InfoRow(labelKey: "lab.backend.qemu", value: lab.host.qemuVersion.map { "QEMU \($0)" } ?? LabText.loc("lab.unknown"))
                 InfoRow(labelKey: "lab.backend.accelerators", value: lab.host.qemuAccelerators.isEmpty ? LabText.loc("lab.none") : lab.host.qemuAccelerators.joined(separator: ", "))
                 InfoRow(labelKey: "lab.backend.kvm", value: LabText.yesNo(lab.host.kvmDevicePresent))
                 InfoRow(labelKey: "lab.backend.memory", value: "\(lab.host.memoryAvailableGib) / \(lab.host.memoryTotalGib) GiB")

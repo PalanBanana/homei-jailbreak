@@ -67,7 +67,7 @@
 "lab.backend.kvm_note" = "호스트에 KVM 장치가 있다는 것은 arm64 Darwin 게스트가 그것을 쓸 수 있는지에 대해 아무것도 말해 주지 않습니다.";
 "lab.backend.memory" = "사용 가능 / 전체 메모리";
 "lab.backend.optional" = "선택적 백엔드";
-"lab.backend.qemu" = "QEMU";
+"lab.backend.qemu" = "에뮬레이터";
 "lab.backend.status" = "상태";
 "lab.backend_kind.mock" = "모의(테스트용)";
 "lab.backend_kind.none" = "호스트 작업, VM 없음";
@@ -191,6 +191,7 @@
 "lab.no" = "아니요";
 "lab.none" = "없음";
 "lab.not_established" = "확인되지 않음";
+"lab.overview" = "개요";
 "lab.packages.banner" = "게스트 안에만 설치된 패키지입니다. iPhone용 패키지 관리자가 아닙니다.";
 "lab.packages.files" = "파일";
 "lab.packages.none" = "게스트에 설치된 패키지가 없습니다.";
@@ -198,6 +199,7 @@
 "lab.packages.signature" = "서명";
 "lab.packages.test_key" = "시연용 패키지는 공개 테스트 전용 키로 서명된 비활성 텍스트 픽스처입니다. 연구 도구가 아닙니다.";
 "lab.packages.transactions" = "커밋된 트랜잭션";
+"lab.screens" = "화면";
 "lab.target" = "대상";
 "lab.target.architecture" = "아키텍처";
 "lab.target.banner" = "고정된 연구 대상과 각 사실의 출처입니다. 참조 메타데이터이며 무언가 부팅되었다는 증거가 아닙니다.";

@@ -67,7 +67,7 @@
 "lab.backend.kvm_note" = "A KVM device on the host says nothing about whether an arm64 Darwin guest could use it.";
 "lab.backend.memory" = "Memory available / total";
 "lab.backend.optional" = "Optional backend";
-"lab.backend.qemu" = "QEMU";
+"lab.backend.qemu" = "Emulator";
 "lab.backend.status" = "Status";
 "lab.backend_kind.mock" = "mock (test double)";
 "lab.backend_kind.none" = "host operation, no VM";
@@ -191,6 +191,7 @@
 "lab.no" = "No";
 "lab.none" = "None";
 "lab.not_established" = "Not established";
+"lab.overview" = "Overview";
 "lab.packages.banner" = "Packages installed inside the guest only. This is not a package manager for an iPhone.";
 "lab.packages.files" = "Files";
 "lab.packages.none" = "No packages are installed in the guest.";
@@ -198,6 +199,7 @@
 "lab.packages.signature" = "Signature";
 "lab.packages.test_key" = "The demonstration packages are inert text fixtures signed with a public test-only key. They are not research tools.";
 "lab.packages.transactions" = "Committed transactions";
+"lab.screens" = "Screens";
 "lab.target" = "Target";
 "lab.target.architecture" = "Architecture";
 "lab.target.banner" = "The fixed research target and where each fact comes from. This is reference metadata, not evidence that anything booted.";

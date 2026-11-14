@@ -422,6 +422,12 @@ final class HomeiUITests: XCTestCase {
     private func openLab(_ app: XCUIApplication, _ row: String) {
         let link = app.buttons[row].firstMatch
         XCTAssertTrue(link.waitForExistence(timeout: 8), "row \(row) is not on the lab overview")
+        // The rows lie below the fold. Scroll until the row is clear of the tab bar.
+        var scrolls = 0
+        while !link.isHittable && scrolls < 6 {
+            scrollDown(app)
+            scrolls += 1
+        }
         link.tap()
         XCTAssertTrue(app.navigationBars[row].waitForExistence(timeout: 8), "\(row) did not show its navigation bar")
     }
