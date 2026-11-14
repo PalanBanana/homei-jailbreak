@@ -241,7 +241,7 @@ mod tests {
         out[..name.len()].copy_from_slice(name.as_bytes());
         out.extend((value.len() as u32).to_le_bytes());
         out.extend(value);
-        while out.len() % 4 != 0 {
+        while !out.len().is_multiple_of(4) {
             out.push(0);
         }
         out

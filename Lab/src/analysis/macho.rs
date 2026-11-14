@@ -198,7 +198,7 @@ mod tests {
         cmds.extend(32u32.to_le_bytes());
         cmds.extend(0u32.to_le_bytes());
         cmds.extend(name);
-        while cmds.len() % 8 != 0 {
+        while !cmds.len().is_multiple_of(8) {
             cmds.push(0);
         }
         let mut seg = Vec::new();
