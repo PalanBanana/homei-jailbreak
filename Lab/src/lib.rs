@@ -5,9 +5,11 @@
 //! workspace and starts a small allowlist of programs, and it does so only through `guard` and
 //! `process`. It never touches a physical device, the network or `sudo`.
 
+pub mod analysis;
 pub mod backend;
 pub mod bootstrap;
 pub mod experiments;
+pub mod feasibility;
 pub mod firmware;
 pub mod ghidra;
 pub mod guard;

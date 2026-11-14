@@ -30,6 +30,8 @@ DATA_SCHEMAS = {
     "Data/lab/lab-state.json": "Data/schemas/lab-state.schema.json",
     "Tests/golden/lab-state-fixture.json": "Data/schemas/lab-state.schema.json",
     "Research/Targets/iPhone16,2-iOS27.0.1.json": "Data/schemas/target-manifest.schema.json",
+    "Data/research/t8130-firmware-analysis.json": "Data/schemas/firmware-analysis.schema.json",
+    "Data/research/t8130-feasibility.json": "Data/schemas/t8130-feasibility.schema.json",
 }
 
 REQUIRED_FILES = [
@@ -54,6 +56,11 @@ REQUIRED_FILES = [
     "Docs/DARWIN_VM_BACKEND.md", "Docs/GHIDRA_INTEGRATION.md", "Docs/FIRMWARE_MANIFEST.md",
     "Docs/VIRTUAL_BOOTSTRAP.md", "Docs/VIRTUAL_PACKAGE_MANAGER.md", "Docs/EXPERIMENTS.md", "Docs/VM_FIDELITY.md",
     "Docs/PRIVACY.md",
+    # Firmware analysis and feasibility (v0.3.0 research platform)
+    "Lab/src/analysis/research.rs", "Lab/src/analysis/manifest.rs", "Lab/src/feasibility.rs",
+    "Data/research/t8130-firmware-analysis.json", "Data/research/t8130-feasibility.json",
+    "Data/schemas/firmware-analysis.schema.json", "Data/schemas/t8130-feasibility.schema.json",
+    "Tests/LabTests/research_analysis.rs", "Tests/LabTests/research_io.rs",
 ]
 
 # Patterns that must never appear in published text.
@@ -207,7 +214,37 @@ def main() -> int:
     check("English and Korean string keys match",
           [f"missing in ko: {k}" for k in sorted(en_k - ko_k)] + [f"missing in en: {k}" for k in sorted(ko_k - en_k)])
 
+    research_checks(data)
     return finish()
+
+
+def research_checks(data: dict) -> None:
+    """Cross-reference rules for the firmware analysis and the feasibility matrix."""
+    analysis = data["Data/research/t8130-firmware-analysis.json"]
+    matrix = data["Data/research/t8130-feasibility.json"]
+    failed = [c["id"] for c in analysis["identity_checks"] if not c["passed"]]
+    check("analysis identity checks all pass", [f"failed: {i}" for i in failed])
+    claim_ids = [c["id"] for c in analysis["claims"]]
+    check("analysis claim IDs are unique", sorted({i for i in claim_ids if claim_ids.count(i) > 1}))
+    counted = sum(analysis["summary"][k] for k in
+                  ("analysed", "container_only", "encrypted", "unsupported", "unavailable", "missing", "no_manifest_path"))
+    check("analysis summary counts every component",
+          [] if counted == analysis["summary"]["erase_components"] == len(analysis["components"])
+          else [f"summary {counted}, components {len(analysis['components'])}"])
+    enc = sorted(c["name"] for c in analysis["components"] if c["availability"] == "encrypted")
+    keybag = sorted(c["name"] for c in analysis["components"]
+                    if c["container"] and c["container"].get("keybag_present"))
+    check("encrypted availability matches the keybag element", [] if enc == keybag else [f"{enc} vs {keybag}"])
+    ids = [c["id"] for c in matrix["components"]]
+    check("feasibility component IDs are unique", sorted({i for i in ids if ids.count(i) > 1}))
+    check("feasibility never VERIFIES the exact target",
+          [f"{c['id']} is VERIFIED" for c in matrix["components"] if c["status"] == "VERIFIED"])
+    check("feasibility claims no exact target VM",
+          [] if matrix["exact_target_vm"]["status"] == "NOT_ESTABLISHED"
+          else ["exact_target_vm is not NOT_ESTABLISHED"])
+    check("feasibility matrix is dated to the analysis",
+          [] if matrix["analysis_analysed_on"] == analysis["provenance"]["analysed_on"]
+          else ["analysis date differs from the matrix's source date"])
 
 
 def finish() -> int:

@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "target": "iPhone16,2 / D84AP / T8130 / iOS 27.0.1 (24A446)",
+  "generated_on": "2026-11-14",
+  "analysis_analysed_on": "2026-11-14",
+  "exact_target_vm": {
+    "status": "NOT_ESTABLISHED",
+    "statement": "No exact target VM is established. The target has not booted in any backend, and the blockers are listed in the components above"
+  },
+  "components": [
+    {
+      "id": "cpu",
+      "title": "CPU T8130",
+      "question": "Can the backend model the T8130 CPU (arm64e, GXF/SPRR)?",
+      "status": "UNSUPPORTED",
+      "basis": "Identity is verified. The installed backend has no T8130 CPU model",
+      "decisions": [
+        {
+          "statement": "BuildManifest identity matches iPhone16,2, D84AP, ApChipID 0x8130, build 24A446, 27.0.1",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static manifest",
+          "confidence": "manifest",
+          "last_verified": "2026-11-14",
+          "limitation": "Identity only. It does not show that any hardware model is available"
+        },
+        {
+          "statement": "The installed QEMU (11.1.3) was probed with a generic virt machine and the max CPU only; no T8130 CPU model, darwin machine or SEP model was present",
+          "source": "logs/phase9-actual-boot-report.md",
+          "evidence_type": "recorded backend probe",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Recorded in phase 9. Not re-run in this phase, per the static-only constraint"
+        }
+      ]
+    },
+    {
+      "id": "memory_map",
+      "title": "Memory map",
+      "question": "Is the target's physical memory layout modelled?",
+      "status": "PARTIAL",
+      "basis": "The AIC window translates through the first /arm-io ranges entry. DRAM and carve-outs are filled in at boot and are not in the static tree",
+      "decisions": [
+        {
+          "statement": "The first /arm-io ranges entry maps child 0x0 to parent 0x210000000",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Read with the declared cell widths of the node"
+        },
+        {
+          "statement": "The AIC base translates to 0x2d1000000",
+          "source": "research/hardware/t8130-aic-static-correlation.md",
+          "evidence_type": "static device tree arithmetic",
+          "confidence": "inferred",
+          "last_verified": "2026-11-14",
+          "limitation": "The arithmetic is established. That iBoot maps the window there is not"
+        }
+      ]
+    },
+    {
+      "id": "interrupt_controller",
+      "title": "Interrupt controller (AIC, aic,3)",
+      "question": "Can an AIC model for aic,3 be bound to the target's interrupt tree?",
+      "status": "BLOCKED",
+      "basis": "No model. Register semantics are not known: the kernel reads the offsets from the tree, and aic-iack-offset is named in iBoot but absent from the static tree",
+      "decisions": [
+        {
+          "statement": "The AIC compatible is aic,3 with 1 interrupt cell(s)",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "One cell is Apple's convention, confirmed by the kernel diagnostic string in the analysis"
+        },
+        {
+          "statement": "The upstream Linux AIC bindings require three or four interrupt cells and do not list aic,3",
+          "source": "research/hardware/t8130-aic-static-correlation.md",
+          "evidence_type": "public source comparison",
+          "confidence": "inferred",
+          "last_verified": "2026-11-14",
+          "limitation": "Comparison with the public Linux tree, read only. It does not show what Apple's driver does"
+        },
+        {
+          "statement": "The kernel has an AppleInterruptControllerV3 personality matched to aic,3, and the offset property names",
+          "source": "research/hardware/t8130-aic-static-correlation.md",
+          "evidence_type": "static kernelcache strings",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Strings only. No function cross-references were computed"
+        }
+      ]
+    },
+    {
+      "id": "timer",
+      "title": "Timer (aic-timebase)",
+      "question": "Is the always-on timer modelled?",
+      "status": "UNVERIFIED",
+      "basis": "A node exists at the translated window. Its register semantics and any backend model are unknown",
+      "decisions": [
+        {
+          "statement": "The aic-timebase node reg address is 0x2d1180000",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Node presence and address only. No timer behaviour was tested"
+        }
+      ]
+    },
+    {
+      "id": "pmgr",
+      "title": "Power manager (PMGR, pmgr1,t8130)",
+      "question": "Can the PMGR be modelled, and its power domains bound?",
+      "status": "BLOCKED",
+      "basis": "The compatible is not in the public Linux bindings, the tree has no per-domain nodes, and the blob layout is not documented",
+      "decisions": [
+        {
+          "statement": "The PMGR compatible is pmgr1,t8130, with 83 register windows and 39 power-domain names",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Names are ASCII tokens from the blob. No record layout is assumed"
+        },
+        {
+          "statement": "The kernel has an AppleT8130PMGR personality matched to pmgr1,t8130",
+          "source": "research/hardware/t8130-aic-static-correlation.md",
+          "evidence_type": "static kernelcache strings",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Strings only"
+        }
+      ]
+    },
+    {
+      "id": "display",
+      "title": "Display controller (DCP)",
+      "question": "Can the display coprocessor be modelled, and does the backend show a target framebuffer?",
+      "status": "UNSUPPORTED",
+      "basis": "The DCP firmware is present and unencrypted, but there is no DCP model. The only framebuffer is a generic placeholder",
+      "decisions": [
+        {
+          "statement": "The DCP firmware component is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Firmware for the real coprocessor. Not executed"
+        },
+        {
+          "statement": "The recorded probe screenshot shows the generic QEMU placeholder, not an iOS display",
+          "source": "research/display/iphone16,2-display-pipeline.md",
+          "evidence_type": "recorded backend probe",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Generic machine. Not a target result"
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "title": "GPU (AGX)",
+      "question": "Can the GPU firmware and device be modelled?",
+      "status": "UNSUPPORTED",
+      "basis": "GPU firmware is present and unencrypted. The installed backend has no GPU model for the target",
+      "decisions": [
+        {
+          "statement": "The GFX firmware component is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Firmware for the real GPU. Not executed"
+        },
+        {
+          "statement": "The installed QEMU (11.1.3) was probed with a generic virt machine and the max CPU only; no T8130 CPU model, darwin machine or SEP model was present",
+          "source": "logs/phase9-actual-boot-report.md",
+          "evidence_type": "recorded backend probe",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Recorded in phase 9. Not re-run in this phase, per the static-only constraint"
+        }
+      ]
+    },
+    {
+      "id": "usb",
+      "title": "USB controllers",
+      "question": "Are the target USB controllers identified and modelled?",
+      "status": "UNVERIFIED",
+      "basis": "Not researched in the static analysis. No USB model is recorded",
+      "decisions": [
+        {
+          "statement": "No USB controller analysis is recorded for the target",
+          "source": "research/limitations/exact-blockers.md",
+          "evidence_type": "recorded research note",
+          "confidence": "unknown",
+          "last_verified": "2026-11-14",
+          "limitation": "Nothing was established"
+        }
+      ]
+    },
+    {
+      "id": "storage",
+      "title": "Storage (ANS, system volume)",
+      "question": "Can the storage coprocessor run, and is a full system volume available?",
+      "status": "BLOCKED",
+      "basis": "The ANS firmware is analysed but has no model, and the system volume image is not available locally",
+      "decisions": [
+        {
+          "statement": "The ANS firmware component is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Firmware for the real storage coprocessor. Not executed"
+        },
+        {
+          "statement": "The system volume (OS) component is unavailable locally",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "archive listing",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "The archive lists it. There is no local copy, and its key service is external"
+        }
+      ]
+    },
+    {
+      "id": "sep",
+      "title": "SEP interface",
+      "question": "Can the Secure Enclave firmware be run or emulated?",
+      "status": "BLOCKED",
+      "basis": "The SEP firmware is encrypted with a keybag and its keys are not available. No SEP model exists for this target",
+      "decisions": [
+        {
+          "statement": "The SEP firmware component is encrypted (keys not available)",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P keybag",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "The keys are not in the archive. No decryption was attempted"
+        },
+        {
+          "statement": "The installed QEMU (11.1.3) was probed with a generic virt machine and the max CPU only; no T8130 CPU model, darwin machine or SEP model was present",
+          "source": "logs/phase9-actual-boot-report.md",
+          "evidence_type": "recorded backend probe",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Recorded in phase 9. Not re-run in this phase, per the static-only constraint"
+        }
+      ]
+    },
+    {
+      "id": "sptm",
+      "title": "SPTM",
+      "question": "Can the Secure Page Table Monitor run under the backend?",
+      "status": "BLOCKED",
+      "basis": "The image is analysed, but the backend lacks most of the implementation-defined registers it uses",
+      "decisions": [
+        {
+          "statement": "The SPTM component is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Not executed"
+        },
+        {
+          "statement": "In the A13-based model used by the fork, 98 of 127 SPTM implementation-defined registers are undefined",
+          "source": "research/hardware/sptm-register-census.md; research/hardware/cpreg-gap.json",
+          "evidence_type": "static register census",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Census of the static image. Lifetime classes are low confidence (indirect calls unresolved)"
+        },
+        {
+          "statement": "The SPTM image is named for T8122 while the device tree is T8130",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static file name",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "The naming discrepancy is recorded, not resolved"
+        }
+      ]
+    },
+    {
+      "id": "txm",
+      "title": "TXM",
+      "question": "Can the Trusted Execution Monitor run under the backend?",
+      "status": "BLOCKED",
+      "basis": "The TXM runs under the SPTM, which is itself blocked",
+      "decisions": [
+        {
+          "statement": "The TXM component is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Not executed"
+        },
+        {
+          "statement": "The TXM runs under the SPTM in the handoff order",
+          "source": "research/boot-chain/iphone16,2-handoff-analysis.md",
+          "evidence_type": "static boot-chain analysis",
+          "confidence": "inferred",
+          "last_verified": "2026-11-14",
+          "limitation": "The order is taken from the boot-chain notes. Not observed at run time"
+        }
+      ]
+    },
+    {
+      "id": "devicetree",
+      "title": "DeviceTree compatibility",
+      "question": "Can the target device tree be loaded by the backend?",
+      "status": "PARTIAL",
+      "basis": "The tree parses and its identity is correct. The backend cannot load it, and boot-time values are missing",
+      "decisions": [
+        {
+          "statement": "The root compatible is D84AP, iPhone16,2, AppleARM",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Static template from the restore archive"
+        },
+        {
+          "statement": "The tree has 379 nodes",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static device tree",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Node count of the binary payload"
+        }
+      ]
+    },
+    {
+      "id": "kernel",
+      "title": "Kernel compatibility",
+      "question": "Can the target kernel boot on the target platform model?",
+      "status": "BLOCKED",
+      "basis": "No boot has been observed. The kernel configuration token names T8122 while the platform is T8130, and no T8130 platform model exists",
+      "decisions": [
+        {
+          "statement": "The kernel is a arm64e MH_FILESET image with 264 fileset entries",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static Mach-O",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Header and load commands only"
+        },
+        {
+          "statement": "The kernel build reports xnu-13432.2.10~2 with configuration RELEASE_ARM64_T8122",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static kernel strings",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "The T8122 token against the T8130 platform is unresolved"
+        }
+      ]
+    },
+    {
+      "id": "rootfs",
+      "title": "Root filesystem availability",
+      "question": "Is a root filesystem available for the target?",
+      "status": "PARTIAL",
+      "basis": "The restore ramdisk is present and unencrypted. The system volume is not available locally",
+      "decisions": [
+        {
+          "statement": "The restore ramdisk is analysed",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "static IM4P container",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "A restore environment, not the installed system"
+        },
+        {
+          "statement": "The system volume (OS) component is unavailable locally",
+          "source": "firmware analysis bundle (t8130-firmware-analysis.json)",
+          "evidence_type": "archive listing",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "Its key service is external. No decryption was attempted"
+        }
+      ]
+    },
+    {
+      "id": "gui",
+      "title": "GUI feasibility",
+      "question": "Can the target display an interface in the backend?",
+      "status": "BLOCKED",
+      "basis": "No boot has been observed. The display, the GPU and the kernel are each blocked",
+      "decisions": [
+        {
+          "statement": "No target boot or display output has been observed",
+          "source": "logs/phase9-actual-boot-report.md",
+          "evidence_type": "recorded probe",
+          "confidence": "target",
+          "last_verified": "2026-11-14",
+          "limitation": "The probes used a generic machine and are not target boots"
+        }
+      ]
+    }
+  ]
+}

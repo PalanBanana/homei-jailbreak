@@ -36,6 +36,13 @@ targets:
       # Sanitized lab state exported by the host controller (Data/lab/lab-state.json). Read only.
       - path: ../Data/lab/lab-state.json
         buildPhase: resources
+      # Firmware research exports (static analysis, feasibility matrix, SPTM register summary). Read only.
+      - path: ../Data/research/t8130-firmware-analysis.json
+        buildPhase: resources
+      - path: ../Data/research/t8130-feasibility.json
+        buildPhase: resources
+      - path: ../Data/research/t8130-sptm-census.json
+        buildPhase: resources
     dependencies:
       - package: HomeiKit
     settings:

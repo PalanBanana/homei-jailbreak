@@ -1,0 +1,1996 @@
+{
+  "schema_version": 1,
+  "source_description": "Static census of the SPTM image (no execution). Access classes are candidates; lifetime classes are low confidence where runtime dispatch is unresolved.",
+  "access_rows": 1444,
+  "register_count": 127,
+  "defined_in_fork_count": 29,
+  "undefined_in_fork_count": 98,
+  "runtime_reachable_register_count": 17,
+  "registers": [
+    {
+      "encoding": "S3_0_C15_C0_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C0_3",
+      "defined_in_fork": false,
+      "accesses": 116,
+      "mrs": 58,
+      "msr": 58,
+      "read_modify_write_candidates": 58,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C0_4",
+      "defined_in_fork": false,
+      "accesses": 82,
+      "mrs": 41,
+      "msr": 41,
+      "read_modify_write_candidates": 41,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C10_1",
+      "defined_in_fork": true,
+      "accesses": 10,
+      "mrs": 5,
+      "msr": 5,
+      "read_modify_write_candidates": 5,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C11_2",
+      "defined_in_fork": false,
+      "accesses": 40,
+      "mrs": 20,
+      "msr": 20,
+      "read_modify_write_candidates": 20,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C11_3",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C14_0",
+      "defined_in_fork": true,
+      "accesses": 108,
+      "mrs": 54,
+      "msr": 54,
+      "read_modify_write_candidates": 54,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C15_0",
+      "defined_in_fork": true,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C15_2",
+      "defined_in_fork": true,
+      "accesses": 16,
+      "mrs": 8,
+      "msr": 8,
+      "read_modify_write_candidates": 8,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C1_1",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 2,
+      "msr": 2,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C1_2",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 2,
+      "msr": 2,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C1_6",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C2_3",
+      "defined_in_fork": false,
+      "accesses": 14,
+      "mrs": 7,
+      "msr": 7,
+      "read_modify_write_candidates": 7,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C2_4",
+      "defined_in_fork": false,
+      "accesses": 48,
+      "mrs": 24,
+      "msr": 24,
+      "read_modify_write_candidates": 24,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C2_5",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 2,
+      "msr": 2,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C3_0",
+      "defined_in_fork": true,
+      "accesses": 18,
+      "mrs": 9,
+      "msr": 9,
+      "read_modify_write_candidates": 9,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C4_0",
+      "defined_in_fork": true,
+      "accesses": 20,
+      "mrs": 10,
+      "msr": 10,
+      "read_modify_write_candidates": 5,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C4_1",
+      "defined_in_fork": true,
+      "accesses": 10,
+      "mrs": 5,
+      "msr": 5,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C7_0",
+      "defined_in_fork": true,
+      "accesses": 4,
+      "mrs": 2,
+      "msr": 2,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C7_1",
+      "defined_in_fork": false,
+      "accesses": 8,
+      "mrs": 4,
+      "msr": 4,
+      "read_modify_write_candidates": 4,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C9_0",
+      "defined_in_fork": true,
+      "accesses": 8,
+      "mrs": 4,
+      "msr": 4,
+      "read_modify_write_candidates": 4,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_0_C15_C9_1",
+      "defined_in_fork": false,
+      "accesses": 24,
+      "mrs": 12,
+      "msr": 12,
+      "read_modify_write_candidates": 12,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_1_C15_C1_5",
+      "defined_in_fork": false,
+      "accesses": 11,
+      "mrs": 2,
+      "msr": 9,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_1_C15_C1_6",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 1,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 3,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_1_C15_C8_2",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_1_C15_C9_4",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 0,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_3_C15_C10_0",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 1,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_3_C15_C8_0",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 1,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_3_C15_C9_0",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 1,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C0_4",
+      "defined_in_fork": false,
+      "accesses": 25,
+      "mrs": 10,
+      "msr": 15,
+      "read_modify_write_candidates": 10,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C0_5",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C0_6",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C10_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C10_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C10_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C10_3",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C10_7",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 1,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C11_0",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 0,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C11_1",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 0,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C11_4",
+      "defined_in_fork": false,
+      "accesses": 6,
+      "mrs": 3,
+      "msr": 3,
+      "read_modify_write_candidates": 3,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C11_5",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 0,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C12_0",
+      "defined_in_fork": false,
+      "accesses": 5,
+      "mrs": 2,
+      "msr": 3,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 3,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C12_5",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C14_6",
+      "defined_in_fork": false,
+      "accesses": 5,
+      "mrs": 1,
+      "msr": 4,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 3,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C15_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C15_4",
+      "defined_in_fork": false,
+      "accesses": 11,
+      "mrs": 2,
+      "msr": 9,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C15_5",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C1_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C1_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C1_2",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 1,
+      "msr": 2,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C2_2",
+      "defined_in_fork": true,
+      "accesses": 6,
+      "mrs": 3,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C2_3",
+      "defined_in_fork": true,
+      "accesses": 4,
+      "mrs": 0,
+      "msr": 4,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C2_4",
+      "defined_in_fork": true,
+      "accesses": 4,
+      "mrs": 0,
+      "msr": 4,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C2_5",
+      "defined_in_fork": true,
+      "accesses": 8,
+      "mrs": 5,
+      "msr": 3,
+      "read_modify_write_candidates": 3,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C2_6",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C4_6",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C4_7",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 1,
+      "msr": 2,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 3,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C5_2",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C8_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C8_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C8_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C8_3",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_3",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_4",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_5",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_4_C15_C9_7",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C11_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C1_3",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C3_3",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C3_6",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C3_7",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_5_C15_C4_0",
+      "defined_in_fork": true,
+      "accesses": 4,
+      "mrs": 2,
+      "msr": 2,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C0_2",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 1,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "runtime-root-reachable"
+      ],
+      "lifetime_classes": [
+        "runtime (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C0_5",
+      "defined_in_fork": false,
+      "accesses": 9,
+      "mrs": 2,
+      "msr": 7,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_0",
+      "defined_in_fork": false,
+      "accesses": 5,
+      "mrs": 3,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_2",
+      "defined_in_fork": false,
+      "accesses": 3,
+      "mrs": 0,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_3",
+      "defined_in_fork": false,
+      "accesses": 34,
+      "mrs": 18,
+      "msr": 16,
+      "read_modify_write_candidates": 3,
+      "reachable_from_early_exception_vectors": 5,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_4",
+      "defined_in_fork": false,
+      "accesses": 10,
+      "mrs": 4,
+      "msr": 6,
+      "read_modify_write_candidates": 4,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_5",
+      "defined_in_fork": false,
+      "accesses": 32,
+      "mrs": 32,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_6",
+      "defined_in_fork": false,
+      "accesses": 49,
+      "mrs": 35,
+      "msr": 14,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 5,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C10_7",
+      "defined_in_fork": false,
+      "accesses": 28,
+      "mrs": 28,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C11_1",
+      "defined_in_fork": false,
+      "accesses": 256,
+      "mrs": 255,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 10,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C12_4",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 2,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C14_4",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C14_5",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C14_7",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_1",
+      "defined_in_fork": false,
+      "accesses": 5,
+      "mrs": 1,
+      "msr": 4,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_2",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 1,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_3",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 1,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_4",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_5",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C15_7",
+      "defined_in_fork": false,
+      "accesses": 4,
+      "mrs": 1,
+      "msr": 3,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C1_0",
+      "defined_in_fork": true,
+      "accesses": 8,
+      "mrs": 0,
+      "msr": 8,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C1_1",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 1,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "runtime-root-reachable"
+      ],
+      "lifetime_classes": [
+        "runtime (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C1_2",
+      "defined_in_fork": true,
+      "accesses": 3,
+      "mrs": 1,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C1_5",
+      "defined_in_fork": true,
+      "accesses": 14,
+      "mrs": 3,
+      "msr": 11,
+      "read_modify_write_candidates": 2,
+      "reachable_from_early_exception_vectors": 2,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C1_6",
+      "defined_in_fork": true,
+      "accesses": 9,
+      "mrs": 2,
+      "msr": 7,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C2_1",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C2_2",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C2_3",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C2_4",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C2_5",
+      "defined_in_fork": false,
+      "accesses": 5,
+      "mrs": 2,
+      "msr": 3,
+      "read_modify_write_candidates": 1,
+      "reachable_from_early_exception_vectors": 3,
+      "call_graph_classes": [
+        "boot-path-only",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C3_0",
+      "defined_in_fork": true,
+      "accesses": 4,
+      "mrs": 1,
+      "msr": 3,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C3_1",
+      "defined_in_fork": true,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C6_0",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C6_1",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C6_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C6_3",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_0",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_1",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_2",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_3",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_4",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_5",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_6",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C7_7",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C8_0",
+      "defined_in_fork": true,
+      "accesses": 199,
+      "mrs": 199,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only",
+        "runtime-root-reachable",
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)",
+        "runtime (candidate)",
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C8_1",
+      "defined_in_fork": true,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C8_2",
+      "defined_in_fork": true,
+      "accesses": 2,
+      "mrs": 0,
+      "msr": 2,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C8_5",
+      "defined_in_fork": false,
+      "accesses": 1,
+      "mrs": 0,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_6_C15_C9_2",
+      "defined_in_fork": false,
+      "accesses": 2,
+      "mrs": 1,
+      "msr": 1,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 1,
+      "call_graph_classes": [
+        "unresolved"
+      ],
+      "lifetime_classes": [
+        "unknown"
+      ]
+    },
+    {
+      "encoding": "S3_7_C15_C2_0",
+      "defined_in_fork": true,
+      "accesses": 2,
+      "mrs": 2,
+      "msr": 0,
+      "read_modify_write_candidates": 0,
+      "reachable_from_early_exception_vectors": 0,
+      "call_graph_classes": [
+        "boot-path-only"
+      ],
+      "lifetime_classes": [
+        "initialization-only (candidate)"
+      ]
+    }
+  ]
+}

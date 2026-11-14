@@ -90,3 +90,11 @@ path = "LabTests/state.rs"
 
 [lints]
 workspace = true
+
+[[test]]
+name = "lab_research_analysis"
+path = "LabTests/research_analysis.rs"
+
+[[test]]
+name = "lab_research_io"
+path = "LabTests/research_io.rs"

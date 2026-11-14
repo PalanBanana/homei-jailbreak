@@ -492,6 +492,80 @@ final class HomeiUITests: XCTestCase {
         shot(app, "lab-bootstrap-en")
     }
 
+    // MARK: Firmware research screens
+
+    /// Open the firmware research hub from the lab overview.
+    private func openResearch(_ app: XCUIApplication) {
+        openMore(app, "Virtual Research Lab")
+        openLab(app, "Firmware research")
+    }
+
+    func testResearchHubStatesNoExactVMAndOpensEveryScreen() {
+        let app = launch()
+        openResearch(app)
+        XCTAssertTrue(has(app, "NOT_ESTABLISHED"), "the exact target VM is shown as not established")
+        XCTAssertTrue(has(app, "Static analysis of firmware files. Nothing was booted, emulated or simulated."))
+        XCTAssertFalse(has(app, "EXACT TARGET VERIFIED", timeout: 1))
+        shot(app, "research-hub-en")
+        audit(app, screen: "research-hub")
+    }
+
+    func testFirmwareExplorerShowsTheEncryptedImagesAndTheManifestCounts() {
+        let app = launch()
+        openResearch(app)
+        openLab(app, "Firmware explorer")
+        XCTAssertTrue(has(app, "Encrypted (keys not available)"))
+        XCTAssertTrue(has(app, "No path stated in the manifest"))
+        XCTAssertTrue(has(app, "24A446"))
+        shot(app, "research-firmware-en")
+        audit(app, screen: "research-firmware")
+    }
+
+    func testDeviceTreeAndKernelcacheShowTheRecordedValuesWithoutInventingAny() {
+        let app = launch()
+        openResearch(app)
+        openLab(app, "Device tree inspector")
+        XCTAssertTrue(has(app, "D84AP, iPhone16,2, AppleARM"))
+        XCTAssertTrue(has(app, "arm-io,t8130"))
+        openLab(app, "Kernelcache inspector")
+        XCTAssertTrue(has(app, "RELEASE_ARM64_T8122"))
+        XCTAssertTrue(has(app, "MH_FILESET"))
+        audit(app, screen: "research-kernelcache")
+    }
+
+    func testAICAndPMGRScreenReportsTheTranslationAsInferredNotVerified() {
+        let app = launch()
+        openResearch(app)
+        openLab(app, "AIC and PMGR research")
+        XCTAssertTrue(has(app, "0x2d1000000"))
+        XCTAssertTrue(has(app, "aic,3"))
+        XCTAssertTrue(has(app, "BLOCKED"))
+        audit(app, screen: "research-aicpmgr")
+    }
+
+    func testSPTMGhidraAndVMScreensStateTheirLimits() {
+        let app = launch()
+        openResearch(app)
+        openLab(app, "SPTM register inventory")
+        XCTAssertTrue(has(app, "127"))
+        XCTAssertTrue(has(app, "Undefined in the fork's model"))
+        openLab(app, "Ghidra analysis browser")
+        XCTAssertTrue(has(app, "Not exported (unknown)"))
+        openLab(app, "VM feasibility")
+        XCTAssertTrue(has(app, "NOT_ESTABLISHED"))
+        XCTAssertTrue(has(app, "Not established"))
+        audit(app, screen: "research-vm")
+    }
+
+    func testEvidenceExplorerShowsConfidenceTagsAndLimitations() {
+        let app = launch()
+        openResearch(app)
+        openLab(app, "Evidence explorer")
+        XCTAssertTrue(has(app, "[T] FA-001"))
+        XCTAssertTrue(has(app, "Limitation"))
+        audit(app, screen: "research-evidence")
+    }
+
     func testKoreanLab() {
         let app = launch(language: "ko", locale: "ko_KR")
         tab(app, "더 보기")

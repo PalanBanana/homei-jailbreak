@@ -4,6 +4,16 @@ All notable changes are recorded here. Dates use ISO 8601.
 
 ## [Unreleased]
 
+### Firmware research platform (2026-11-14, branch `feature/a17pro-virtual-research-lab`, not released)
+
+- **Static analysis only. No exact A17 Pro virtual machine is established, and nothing was booted, emulated or simulated.** `Lab/src/analysis/` reads the restore archive's central directory, the BuildManifest, the extracted IM4P files and decompressed payloads, and an optional Ghidra project. It writes a sanitized JSON bundle and a Markdown report. Each statement carries a confidence tag (target, manifest, inferred, unknown).
+- Availability is kept in seven distinct states: analysed, container only, encrypted, unsupported, unavailable, missing, and no manifest path. Nothing is reported missing that the archive contains.
+- `homei-lab feasibility` derives a sixteen-component T8130 matrix from the bundle and recorded research notes. Statuses are VERIFIED, PARTIAL, BLOCKED, UNSUPPORTED and UNVERIFIED. None is VERIFIED for the exact target, and the matrix refuses a bundle that fails the identity check.
+- Committed data: `Data/research/` (analysis bundle, feasibility matrix, SPTM register census summary) with JSON Schemas. Reports: `reports/`.
+- App: research screens in English and Korean, with Swift models that decode the same files, and Rust/Swift parity tests on the committed data.
+- Verification: 208 Rust tests, 54 Swift tests (Linux, Swift 6.4.1), clippy with warnings denied, `cargo deny`, `cargo audit`, and `scripts/validate_data.py`. The SwiftUI screens and UI tests are verified only by the macOS CI run.
+- Limitations are listed in `reports/firmware-analysis-engine.md`. Six restore-variant digests do not match their local files, and the reason is not established.
+
 ### 0.3.0 A17 Pro virtual research lab (2026-11-14, branch `feature/a17pro-virtual-research-lab`, not released)
 
 - **No exact A17 Pro virtual machine was demonstrated.** The feasibility investigation (`Docs/EXACT_TARGET_FEASIBILITY.md`) found that `darwin-vm` is a generic Darwin machine with QEMU's generic CPU, does not list `iPhone16,2` or build 24A446 as tested, and cannot run on the checking host today: its QEMU has no `darwin` machine, firmware preparation needs macOS, the ramdisk and device tree are absent, and the upstream script mishandles this build's monitor image name. Status `BLOCKED_BY_MISSING_QEMU_FEATURE`, hardware fidelity `UNVERIFIED`. Nothing was booted and no result is marked reproduced.

@@ -42,6 +42,10 @@ const USAGE: &str = "homei-lab: virtual research lab host controller
                remove WS --id ID --approve | rollback WS --approve
   demo         --workspace DIR [--repo-root DIR]      run and record a real guest-workspace session
   export-state --repo-root DIR --lab-dir DIR --out FILE [--workspace DIR]
+  analyze      --ipsw FILE --input DIR --out DIR [--ghidra FILE.gpr] [--date YYYY-MM-DD]
+                                                      static firmware analysis; reads only, writes the report
+  feasibility  --analysis FILE.json [--out DIR] [--date YYYY-MM-DD]
+                                                      T8130 feasibility matrix from the analysis; reads only
 
 Never runs a guest automatically. Never touches a device and needs no elevated privileges.";
 
@@ -831,8 +835,68 @@ fn cmd_export(args: &[String]) {
     println!("wrote the lab state: VM status {}, {} firmware artifact(s), {} function(s) in the Ghidra summary, {} experiment(s)", state.fidelity.vm_status.as_str(), state.firmware.len(), state.ghidra.function_count, state.experiments.len());
 }
 
+/// Static firmware analysis. Reads the restore archive, the manifest and the extracted tree, and
+/// writes a JSON bundle and a Markdown report to `--out`. Nothing is executed.
+fn cmd_analyze(args: &[String]) {
+    let ipsw = PathBuf::from(opt(args, "--ipsw").unwrap_or_else(|| die("--ipsw is required")));
+    let input = PathBuf::from(opt(args, "--input").unwrap_or_else(|| die("--input is required")));
+    let out = PathBuf::from(opt(args, "--out").unwrap_or_else(|| die("--out is required")));
+    let ghidra = opt(args, "--ghidra").map(PathBuf::from);
+    let date = opt(args, "--date").unwrap_or_else(|| utc_now()[..10].to_string());
+    let bundle = homei_lab::analysis::research::analyze(&input, &ipsw, ghidra.as_deref(), &date)
+        .unwrap_or_else(|e| die(&e.to_string()));
+    std::fs::create_dir_all(&out).unwrap_or_else(|_| die("cannot create the output directory"));
+    let json = serde_json::to_string_pretty(&bundle).unwrap_or_else(|_| die("cannot encode"));
+    std::fs::write(out.join("t8130-firmware-analysis.json"), json + "\n")
+        .unwrap_or_else(|_| die("cannot write the JSON bundle"));
+    std::fs::write(
+        out.join("t8130-firmware-analysis.md"),
+        homei_lab::analysis::report::markdown(&bundle),
+    )
+    .unwrap_or_else(|_| die("cannot write the report"));
+    println!(
+        "analysis written: {} components, {} claims",
+        bundle.components.len(),
+        bundle.claims.len()
+    );
+}
+
+/// Feasibility matrix. Implemented in the feasibility module; see that module for the statuses.
+fn cmd_feasibility(args: &[String]) {
+    let analysis =
+        PathBuf::from(opt(args, "--analysis").unwrap_or_else(|| die("--analysis is required")));
+    let out = PathBuf::from(opt(args, "--out").unwrap_or_else(|| ".".into()));
+    let date = opt(args, "--date").unwrap_or_else(|| utc_now()[..10].to_string());
+    let text =
+        std::fs::read_to_string(&analysis).unwrap_or_else(|_| die("cannot read the analysis file"));
+    let bundle: homei_lab::analysis::research::Bundle =
+        serde_json::from_str(&text).unwrap_or_else(|e| {
+            die(&format!(
+                "analysis file does not match the bundle schema: {e}"
+            ))
+        });
+    let matrix = homei_lab::feasibility::evaluate(&bundle, &date).unwrap_or_else(|e| die(&e));
+    std::fs::create_dir_all(&out).unwrap_or_else(|_| die("cannot create the output directory"));
+    let json = serde_json::to_string_pretty(&matrix).unwrap_or_else(|_| die("cannot encode"));
+    std::fs::write(out.join("t8130-feasibility.json"), json + "\n")
+        .unwrap_or_else(|_| die("cannot write"));
+    std::fs::write(
+        out.join("t8130-feasibility-report.md"),
+        homei_lab::feasibility::markdown(&matrix),
+    )
+    .unwrap_or_else(|_| die("cannot write"));
+    println!(
+        "feasibility written: {} components",
+        matrix.components.len()
+    );
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
+    if flag(&args, "--help") || flag(&args, "-h") {
+        println!("{USAGE}");
+        return;
+    }
     match args.first().map(String::as_str) {
         Some("target") => cmd_target(&args),
         Some("preflight") => cmd_preflight(&args),
@@ -843,6 +907,8 @@ fn main() {
         Some("pkg") => cmd_pkg(&args),
         Some("demo") => cmd_demo(&args),
         Some("export-state") => cmd_export(&args),
+        Some("analyze") => cmd_analyze(&args),
+        Some("feasibility") => cmd_feasibility(&args),
         _ => {
             println!("{USAGE}");
             std::process::exit(if args.is_empty() { 0 } else { 2 });

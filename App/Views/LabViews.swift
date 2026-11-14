@@ -131,6 +131,7 @@ struct LabHomeView: View {
                 LabLinkRow(titleKey: "lab.nav.bootstrap") { LabBootstrapView() }
                 LabLinkRow(titleKey: "lab.nav.experiments") { LabExperimentsView() }
                 LabLinkRow(titleKey: "lab.nav.fidelity") { LabFidelityView() }
+                LabLinkRow(titleKey: "lab.nav.research") { ResearchHomeView() }
             }
         }
     }
