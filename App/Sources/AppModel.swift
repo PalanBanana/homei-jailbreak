@@ -9,6 +9,9 @@ final class AppModel: ObservableObject {
     let store: DataStore?
     let catalog: PackageCatalog?
     let loadError: String?
+    /// The sanitized lab state exported by the host controller. The app never runs a virtual machine.
+    let lab: LabState?
+    let labError: String?
 
     init() {
         var loadedStore: DataStore?
@@ -21,6 +24,13 @@ final class AppModel: ObservableObject {
         store = loadedStore
         catalog = loadedStore == nil ? nil : try? PackageCatalog.bundled()
         loadError = failure
+        do {
+            lab = try LabStore.bundled()
+            labError = nil
+        } catch {
+            lab = nil
+            labError = "\(error)"
+        }
     }
 
     var fixture: Fixture? { store?.fixtures.first { $0.id == selectedFixtureID } ?? store?.fixtures.first }

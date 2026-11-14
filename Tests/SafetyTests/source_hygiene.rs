@@ -94,14 +94,34 @@ fn product_code_has_no_device_network_process_or_write_paths() {
 
 #[test]
 fn only_serde_and_workspace_crates_are_dependencies() {
-    let allowed = [
+    let base = [
         "serde",
         "serde_json",
         "homei-core",
         "homei-catalog",
         "homei-bootstrap",
     ];
-    for m in ["Core", "Catalog", "Bootstrap", "Tools/homei-cli", "Tests"] {
+    // Each crate has its own explicit list. The portable crates take no cryptography and no
+    // host-access crate. The host controller and the test crate take exactly what they need.
+    let lab = ["serde", "serde_json", "homei-core", "sha2", "ed25519-dalek"];
+    let tests = [
+        "serde",
+        "serde_json",
+        "homei-core",
+        "homei-catalog",
+        "homei-bootstrap",
+        "homei-lab",
+        "ed25519-dalek",
+    ];
+    let crates: [(&str, &[&str]); 6] = [
+        ("Core", &base),
+        ("Catalog", &base),
+        ("Bootstrap", &base),
+        ("Tools/homei-cli", &base),
+        ("Lab", &lab),
+        ("Tests", &tests),
+    ];
+    for (m, allowed) in crates {
         let text = fs::read_to_string(root().join(m).join("Cargo.toml")).unwrap();
         let mut in_deps = false;
         for line in text.lines() {
@@ -122,7 +142,14 @@ fn only_serde_and_workspace_crates_are_dependencies() {
 
 #[test]
 fn product_crates_have_no_build_scripts() {
-    for m in ["Core", "Catalog", "Bootstrap", "Tools/homei-cli", "Tests"] {
+    for m in [
+        "Core",
+        "Catalog",
+        "Bootstrap",
+        "Tools/homei-cli",
+        "Lab",
+        "Tests",
+    ] {
         assert!(
             !root().join(m).join("build.rs").exists(),
             "{m} has a build script"

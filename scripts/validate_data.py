@@ -27,6 +27,9 @@ DATA_SCHEMAS = {
     "Catalog/Packages/catalog.json": "Catalog/Schemas/catalog.schema.json",
     "Catalog/Sources/sources.json": "Catalog/Schemas/sources.schema.json",
     "Bootstrap/Models/fixture-manifest.json": "Bootstrap/Models/manifest.schema.json",
+    "Data/lab/lab-state.json": "Data/schemas/lab-state.schema.json",
+    "Tests/golden/lab-state-fixture.json": "Data/schemas/lab-state.schema.json",
+    "Research/Targets/iPhone16,2-iOS27.0.1.json": "Data/schemas/target-manifest.schema.json",
 }
 
 REQUIRED_FILES = [
@@ -42,6 +45,15 @@ REQUIRED_FILES = [
     ".github/workflows/swift-build.yml", "App/Resources/en.lproj/Localizable.strings",
     "App/Resources/ko.lproj/Localizable.strings", "App/Resources/Branding/homei-icon.svg",
     ".github/workflows/validate.yml", ".github/workflows/secret-scan.yml",
+    # Virtual research lab (v0.3.0)
+    "Lab/Cargo.toml", "Lab/src/lib.rs", "Lab/src/bin/homei-lab.rs", "Core/src/target.rs", "Core/src/fidelity.rs",
+    "Core/src/experiment.rs", "Core/src/labstate.rs", "Data/lab/lab-state.json", "Data/schemas/lab-state.schema.json",
+    "Data/schemas/target-manifest.schema.json", "Research/Targets/iPhone16,2-iOS27.0.1.json",
+    "Tests/golden/lab-state-fixture.json", "Tests/SwiftTests/LabStateTests.swift", "App/Sources/Kit/Lab.swift",
+    "App/Views/LabViews.swift", "Docs/EXACT_TARGET_FEASIBILITY.md", "Docs/VIRTUAL_RESEARCH_LAB.md",
+    "Docs/DARWIN_VM_BACKEND.md", "Docs/GHIDRA_INTEGRATION.md", "Docs/FIRMWARE_MANIFEST.md",
+    "Docs/VIRTUAL_BOOTSTRAP.md", "Docs/VIRTUAL_PACKAGE_MANAGER.md", "Docs/EXPERIMENTS.md", "Docs/VM_FIDELITY.md",
+    "Docs/PRIVACY.md",
 ]
 
 # Patterns that must never appear in published text.

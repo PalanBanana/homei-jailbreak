@@ -15,12 +15,26 @@ External binaries, package sources, profiles and firmware artefacts are rejected
 ## How this is enforced
 
 - **Closed allow-list** in the Safety Manager (Rust and Swift), with tests for every operation.
-- **No capability to misuse:** `unsafe` is forbidden. Source-hygiene tests fail the build if product code gains network, process, device or filesystem-write constructs, a build script, or any dependency beyond `serde` and `serde_json`.
+- **No capability to misuse:** `unsafe` is forbidden. Source-hygiene tests fail the build if the portable crates (`Core`, `Catalog`, `Bootstrap`, the CLI) gain network, process, device or filesystem-write constructs, a build script, or any dependency beyond `serde` and `serde_json`. The host controller is the single, separately audited exception (see below), with its own pinned dependency list.
 - **No fake success:** privileged capabilities return an explicit unsupported result.
 - **No jailbreak button:** the interface shows a "Research Only" notice where a button might be.
 - **No device code:** no USB, pairing, discovery or polling exists. Profiles are typed in, imported or bundled. The iOS project declares no entitlements, background modes or usage descriptions.
 - **Identifier-proof data:** profiles reject unknown keys and identifier-like values, and diagnostic exports refuse identifier-like tokens.
 - **Privacy gate in CI:** the validator and the secret scan fail on identifiers, personal paths, tokens and device-state phrases.
+
+## The virtual research lab
+
+The host controller (`homei-lab`) is the one place that writes files or starts a process, and it is separate from the application and from the portable crates. Its limits:
+
+- It never connects to or inspects a physical device: no USB passthrough, no pairing, no discovery, no polling.
+- It never uses `sudo` and never changes host boot configuration. It installs nothing system-wide.
+- It starts only `qemu-system-aarch64` and `qemu-img`, never through a shell, with a timeout and capped output. A guest starts only with an explicit `--start-vm` and a passing preflight. There is no automatic start.
+- Guest defaults: no host filesystem passthrough, no USB, no host home mount, no automatic network, no SSH, no background service.
+- Writes go through a path guard. Package installs and snapshots need explicit approval or confirmation, and nothing is deleted without `--confirm`.
+- Guest root is not physical device root, and a result in a guest says nothing about a device.
+- No exploit, kernel primitive, sandbox escape, SPTM/TXM/AMFI bypass, persistence mechanism or device filesystem write exists. A symbol or function name is never turned into a vulnerability claim.
+
+Hygiene tests pin all of this: the process allow-list, one place that spawns, no shell, no `sudo`, no network or USB identifiers, no `unsafe`, and writes only through the guard.
 
 ## Development rules
 

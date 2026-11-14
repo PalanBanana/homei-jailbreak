@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
-members = ["Core", "Catalog", "Bootstrap", "Tools/homei-cli", "Tests"]
+members = ["Core", "Catalog", "Bootstrap", "Lab", "Tools/homei-cli", "Tests"]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/PalanBanana/homei-jailbreak"
@@ -15,6 +15,9 @@ serde_json = "1.0"
 homei-core = { path = "Core" }
 homei-catalog = { path = "Catalog" }
 homei-bootstrap = { path = "Bootstrap" }
+homei-lab = { path = "Lab" }
+sha2 = "0.10"
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

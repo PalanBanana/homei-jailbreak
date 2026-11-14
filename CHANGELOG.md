@@ -4,6 +4,17 @@ All notable changes are recorded here. Dates use ISO 8601.
 
 ## [Unreleased]
 
+### 0.3.0 A17 Pro virtual research lab (2026-11-14, branch `feature/a17pro-virtual-research-lab`, not released)
+
+- **No exact A17 Pro virtual machine was demonstrated.** The feasibility investigation (`Docs/EXACT_TARGET_FEASIBILITY.md`) found that `darwin-vm` is a generic Darwin machine with QEMU's generic CPU, does not list `iPhone16,2` or build 24A446 as tested, and cannot run on the checking host today: its QEMU has no `darwin` machine, firmware preparation needs macOS, the ramdisk and device tree are absent, and the upstream script mishandles this build's monitor image name. Status `BLOCKED_BY_MISSING_QEMU_FEATURE`, hardware fidelity `UNVERIFIED`. Nothing was booted and no result is marked reproduced.
+- New crate `homei-lab` (host controller, `homei-lab` binary) and portable types in `homei-core` (`target`, `fidelity`, `experiment`, `labstate`): canonical target manifest with per-field provenance, VM status and three-axis fidelity engine, VM backend adapter with preflight and a dry-run launch plan, isolated guest storage with a path guard, checksummed snapshots and confirmed deletion, firmware artifact metadata, read-only Ghidra summary, VM-only bootstrap, guest-only package manager (HPK1, Ed25519, journaled transactions, rollback), experiment tracking with comparison and correlation, and the sanitized `Data/lab/lab-state.json` export.
+- App: ten read-only lab screens in English and Korean, strict Swift decoding that mirrors Rust, and Swift and UI tests. The app cannot start a guest. **These Swift sources and tests were written without a Swift toolchain on the host and are verified only by the macOS CI run.**
+- Tests: 172 Rust tests (109 for the lab), up from 63. Hygiene tests pin the process allow-list (`qemu-system-aarch64`, `qemu-img`), a single spawn site, no shell, no `sudo`, writes only through the guard, and the lab crate's dependency list.
+- Found and fixed while building: a repeat bootstrap run lost the recorded package request and reported `Upgraded` instead of `Unchanged`; the artifact hash parser rejected a record with a null path; a version type disagreed with itself about `1.0` and `1.0.0`; a snapshot listing silently returned nothing for the overlay root; package install journaled after changing state.
+- Dependencies: `sha2` and `ed25519-dalek` (and their transitive crates) for the host controller. `cargo audit` and `cargo deny check` pass. `deny.toml` allows `BSD-3-Clause`, a permissive licence.
+- Added `Data/schemas/lab-state.schema.json` and `target-manifest.schema.json`, validator entries and ten new documents (`Docs/VIRTUAL_RESEARCH_LAB.md` and nine more). `.gitignore` now also excludes firmware, guest disks and snapshots.
+- Not done: booting any guest, a Corellium integration (recorded as optional and untested), VoiceOver and device testing.
+
 ### 0.2.0 native build and runtime foundation (2026-11-13, branch `v0.2.0-native-build`, not released)
 
 Verified on a GitHub-hosted macOS runner: macOS 26.7.2, Xcode 26.6 (17F113), Swift 6.3.3, iOS Simulator SDK 26.5.

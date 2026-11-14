@@ -25,6 +25,7 @@ struct RootView: View {
 struct MoreView: View {
     var body: some View {
         List {
+            NavigationLink("section.lab") { LabHomeView() }
             NavigationLink("section.package_catalog") { PackageCatalogView() }
             NavigationLink("section.bootstrap") { BootstrapStatusView() }
             NavigationLink("section.diagnostics") { DiagnosticsView() }

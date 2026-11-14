@@ -14,6 +14,9 @@ allow = [
     "Apache-2.0",
     "Unlicense",
     "Unicode-3.0",
+    # Added for the host controller's signature verification (ed25519-dalek, curve25519-dalek, subtle).
+    # Still a permissive licence. No copyleft licence is allowed.
+    "BSD-3-Clause",
 ]
 confidence-threshold = 0.9
 

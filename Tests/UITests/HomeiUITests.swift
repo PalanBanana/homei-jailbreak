@@ -416,6 +416,89 @@ final class HomeiUITests: XCTestCase {
         }
     }
 
+    // MARK: Virtual research lab
+
+    /// Open a screen from the lab overview and wait for its navigation bar.
+    private func openLab(_ app: XCUIApplication, _ row: String) {
+        let link = app.buttons[row].firstMatch
+        XCTAssertTrue(link.waitForExistence(timeout: 8), "row \(row) is not on the lab overview")
+        link.tap()
+        XCTAssertTrue(app.navigationBars[row].waitForExistence(timeout: 8), "\(row) did not show its navigation bar")
+    }
+
+    private func startLikeButtons(_ app: XCUIApplication) -> [String] {
+        app.buttons.matching(NSPredicate(
+            format: "label CONTAINS[c] 'start' OR label CONTAINS[c] 'launch' OR label CONTAINS[c] 'run exploit' OR label ==[c] 'jailbreak'"))
+            .allElementsBoundByIndex.map(\.label)
+    }
+
+    func testLabOverviewDoesNotClaimAnExactVMAndOffersNoStartControl() {
+        let app = launch()
+        openMore(app, "Virtual Research Lab")
+        XCTAssertTrue(has(app, "Exact target VM demonstrated"))
+        XCTAssertTrue(has(app, "iPhone16,2"))
+        XCTAssertTrue(has(app, "24A446"))
+        XCTAssertFalse(has(app, "EXACT TARGET VERIFIED", timeout: 1), "no exact-target status without a demonstrated boot")
+        XCTAssertEqual(startLikeButtons(app), [], "no control that could start a guest")
+        shot(app, "lab-en")
+        audit(app, screen: "lab")
+    }
+
+    func testLabBackendScreenShowsUnavailableControlsAndHostCommands() {
+        let app = launch()
+        openMore(app, "Virtual Research Lab")
+        openLab(app, "VM backend")
+        XCTAssertTrue(has(app, "Start virtual machine"))
+        XCTAssertTrue(has(app, "Unavailable"))
+        XCTAssertTrue(has(app, "homei-lab preflight"))
+        XCTAssertTrue(has(app, "cannot start, stop or snapshot a guest"))
+        XCTAssertEqual(startLikeButtons(app), [], "the start, stop and snapshot rows are explanations, not buttons")
+        shot(app, "lab-backend-en")
+        audit(app, screen: "lab-backend")
+    }
+
+    func testLabFidelityAndExperimentScreensAreHonestAboutWhatWasObserved() {
+        let app = launch()
+        openMore(app, "Virtual Research Lab")
+        openLab(app, "Fidelity report")
+        XCTAssertTrue(has(app, "Guest root is not physical device root"))
+        XCTAssertTrue(has(app, "This is not an exact target virtual machine"))
+        XCTAssertFalse(has(app, "EXACT TARGET VERIFIED", timeout: 1))
+        shot(app, "lab-fidelity-en")
+        audit(app, screen: "lab-fidelity")
+        app.navigationBars.buttons.firstMatch.tap()
+        openLab(app, "Experiments")
+        XCTAssertTrue(has(app, "No virtual machine was started for this experiment"))
+        shot(app, "lab-experiments-en")
+    }
+
+    func testLabGuestPackagesAndBootstrapAreGuestOnly() {
+        let app = launch()
+        openMore(app, "Virtual Research Lab")
+        openLab(app, "Guest workspace")
+        XCTAssertTrue(has(app, "Guest root is not physical device root"))
+        app.navigationBars.buttons.firstMatch.tap()
+        openLab(app, "Guest packages")
+        XCTAssertTrue(has(app, "not a package manager for an iPhone"))
+        app.navigationBars.buttons.firstMatch.tap()
+        openLab(app, "Guest bootstrap")
+        XCTAssertTrue(has(app, "not an iOS jailbreak bootstrap"))
+        shot(app, "lab-bootstrap-en")
+    }
+
+    func testKoreanLab() {
+        let app = launch(language: "ko", locale: "ko_KR")
+        tab(app, "더 보기")
+        let link = app.buttons["가상 연구 랩"].firstMatch
+        XCTAssertTrue(link.waitForExistence(timeout: 8))
+        link.tap()
+        XCTAssertTrue(app.navigationBars["가상 연구 랩"].waitForExistence(timeout: 8))
+        XCTAssertTrue(has(app, "정확한 대상 VM 입증 여부"))
+        XCTAssertFalse(has(app, "Exact target VM demonstrated", timeout: 1), "no untranslated label")
+        shot(app, "lab-ko")
+        audit(app, screen: "lab-ko")
+    }
+
     // MARK: Localisation and text size
 
     func testKoreanInterface() {

@@ -42,6 +42,7 @@ cargo audit && cargo deny check              # cargo install --locked cargo-audi
 python3 -m pip install jsonschema && python3 scripts/validate_data.py
 python3 scripts/check_contrast.py            # colour tokens against WCAG 4.5:1
 python3 scripts/generate_app_icon.py         # rebuilds the icon set from the SVG, byte-for-byte reproducible
+cargo run -p homei-lab -- target --repo-root .   # virtual research lab host controller (see Docs/VIRTUAL_RESEARCH_LAB.md)
 cargo run -p homei-cli -- evaluate FIX-A     # also: capabilities, validate, diagnostics, catalog, simulate, recovery, authorize
 ```
 

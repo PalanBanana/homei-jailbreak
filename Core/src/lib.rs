@@ -10,9 +10,13 @@ pub mod data;
 pub mod device_profile;
 pub mod diagnostics;
 pub mod evidence;
+pub mod experiment;
+pub mod fidelity;
+pub mod labstate;
 pub mod recovery;
 pub mod research;
 pub mod safety;
+pub mod target;
 
 /// Product name and codename.
 pub const PRODUCT_NAME: &str = "HOMEI Jailbreak";

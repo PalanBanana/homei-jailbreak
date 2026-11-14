@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "target_id": "iphone16_2_ios27_0_1_24A446",
+  "commercial_model": "iPhone 15 Pro Max",
+  "product_type": "iPhone16,2",
+  "soc": "Apple A17 Pro",
+  "cpu": "t8130",
+  "board": "D84AP",
+  "cpid": "0x8130",
+  "bdid": "0x06",
+  "architecture": "arm64e",
+  "os_version": "27.0.1",
+  "build_version": "24A446",
+  "vm_status": "NOT_TESTED",
+  "hardware_fidelity": "UNVERIFIED",
+  "provenance": {
+    "commercial_model": {
+      "source": "ipsw device database (device-info for iPhone16,2) and tracker claim C-025",
+      "kind": "secondary",
+      "confidence": "partially_verified",
+      "tracker_claim_ids": [
+        "C-025"
+      ],
+      "note": "A tool database and an index, not an Apple statement."
+    },
+    "product_type": {
+      "source": "SupportedProductTypes in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [
+        "C-157"
+      ],
+      "note": "Package manifest SHA-256 c023bfa8dff4b299aa140699817e53f44fac4ad07cc3a19791d2c39a858021e1, 411742 bytes. Fetched again on 2026-11-14 and identical to the tracker record."
+    },
+    "soc": {
+      "source": "tracker claim C-026",
+      "kind": "secondary",
+      "confidence": "partially_verified",
+      "tracker_claim_ids": [
+        "C-026"
+      ],
+      "note": "Apple's product page did not expose the chip name in the tracker check."
+    },
+    "cpu": {
+      "source": "ipsw device database platform field (t8130) and a community wiki (tracker claim C-160)",
+      "kind": "secondary",
+      "confidence": "partially_verified",
+      "tracker_claim_ids": [
+        "C-160"
+      ],
+      "note": "Not an Apple statement. The package's monitor image is named t8122, not t8130 (see discrepancy D-001)."
+    },
+    "board": {
+      "source": "DeviceClass d84ap in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [],
+      "note": "Also the board name in the ipsw device database."
+    },
+    "cpid": {
+      "source": "ApChipID 0x8130 in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [
+        "C-157",
+        "C-159"
+      ],
+      "note": ""
+    },
+    "bdid": {
+      "source": "ApBoardID 0x06 in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [],
+      "note": "Read directly from the manifest on 2026-11-14."
+    },
+    "architecture": {
+      "source": "arm64e subtype bit in the kernelcache and monitor Mach-O headers (tracker claim C-096)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [
+        "C-096"
+      ],
+      "note": ""
+    },
+    "os_version": {
+      "source": "ProductVersion in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [
+        "C-157"
+      ],
+      "note": "Release date 2026-09-28 is separate (tracker claim C-024, partially verified)."
+    },
+    "build_version": {
+      "source": "ProductBuildVersion in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+      "kind": "primary",
+      "confidence": "verified",
+      "tracker_claim_ids": [
+        "C-157"
+      ],
+      "note": "Apple's pages checked do not list build numbers (tracker claim C-003, partially verified)."
+    }
+  },
+  "discrepancies": [
+    {
+      "id": "D-001",
+      "summary": "The chip identifier is 0x8130 (t8130 in the ipsw database), but the package's monitor image is sptm.t8122.release.im4p and the kernel banner ends in RELEASE_ARM64_T8122. For the A18 Pro and A19 Pro the monitor token matches the chip identifier. Both facts are kept. The CPU name t8130 is a secondary-source label.",
+      "tracker_claim_ids": [
+        "C-159",
+        "C-160"
+      ]
+    }
+  ],
+  "checked_on": "2026-11-14"
+}

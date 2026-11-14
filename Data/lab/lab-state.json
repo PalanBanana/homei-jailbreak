@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-11-14",
+  "target": {
+    "schema_version": 1,
+    "target_id": "iphone16_2_ios27_0_1_24A446",
+    "commercial_model": "iPhone 15 Pro Max",
+    "product_type": "iPhone16,2",
+    "soc": "Apple A17 Pro",
+    "cpu": "t8130",
+    "board": "D84AP",
+    "cpid": "0x8130",
+    "bdid": "0x06",
+    "architecture": "arm64e",
+    "os_version": "27.0.1",
+    "build_version": "24A446",
+    "vm_status": "NOT_TESTED",
+    "hardware_fidelity": "UNVERIFIED",
+    "provenance": {
+      "architecture": {
+        "source": "arm64e subtype bit in the kernelcache and monitor Mach-O headers (tracker claim C-096)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [
+          "C-096"
+        ],
+        "note": ""
+      },
+      "bdid": {
+        "source": "ApBoardID 0x06 in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [],
+        "note": "Read directly from the manifest on 2026-11-14."
+      },
+      "board": {
+        "source": "DeviceClass d84ap in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [],
+        "note": "Also the board name in the ipsw device database."
+      },
+      "build_version": {
+        "source": "ProductBuildVersion in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [
+          "C-157"
+        ],
+        "note": "Apple's pages checked do not list build numbers (tracker claim C-003, partially verified)."
+      },
+      "commercial_model": {
+        "source": "ipsw device database (device-info for iPhone16,2) and tracker claim C-025",
+        "kind": "secondary",
+        "confidence": "partially_verified",
+        "tracker_claim_ids": [
+          "C-025"
+        ],
+        "note": "A tool database and an index, not an Apple statement."
+      },
+      "cpid": {
+        "source": "ApChipID 0x8130 in all three build identities of BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [
+          "C-157",
+          "C-159"
+        ],
+        "note": ""
+      },
+      "cpu": {
+        "source": "ipsw device database platform field (t8130) and a community wiki (tracker claim C-160)",
+        "kind": "secondary",
+        "confidence": "partially_verified",
+        "tracker_claim_ids": [
+          "C-160"
+        ],
+        "note": "Not an Apple statement. The package's monitor image is named t8122, not t8130 (see discrepancy D-001)."
+      },
+      "os_version": {
+        "source": "ProductVersion in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [
+          "C-157"
+        ],
+        "note": "Release date 2026-09-28 is separate (tracker claim C-024, partially verified)."
+      },
+      "product_type": {
+        "source": "SupportedProductTypes in BuildManifest.plist inside Apple's 24A446 package (tracker source S-043)",
+        "kind": "primary",
+        "confidence": "verified",
+        "tracker_claim_ids": [
+          "C-157"
+        ],
+        "note": "Package manifest SHA-256 c023bfa8dff4b299aa140699817e53f44fac4ad07cc3a19791d2c39a858021e1, 411742 bytes. Fetched again on 2026-11-14 and identical to the tracker record."
+      },
+      "soc": {
+        "source": "tracker claim C-026",
+        "kind": "secondary",
+        "confidence": "partially_verified",
+        "tracker_claim_ids": [
+          "C-026"
+        ],
+        "note": "Apple's product page did not expose the chip name in the tracker check."
+      }
+    },
+    "discrepancies": [
+      {
+        "id": "D-001",
+        "summary": "The chip identifier is 0x8130 (t8130 in the ipsw database), but the package's monitor image is sptm.t8122.release.im4p and the kernel banner ends in RELEASE_ARM64_T8122. For the A18 Pro and A19 Pro the monitor token matches the chip identifier. Both facts are kept. The CPU name t8130 is a secondary-source label.",
+        "tracker_claim_ids": [
+          "C-159",
+          "C-160"
+        ]
+      }
+    ],
+    "checked_on": "2026-11-14"
+  },
+  "host": {
+    "distribution": "Linux",
+    "architecture": "x86_64",
+    "qemu_version": "11.1.3",
+    "qemu_accelerators": [
+      "tcg"
+    ],
+    "kvm_device_present": true,
+    "ghidra_version": "12.1.2",
+    "memory_total_gib": 30,
+    "memory_available_gib": 5
+  },
+  "backends": [
+    {
+      "name": "darwin-vm (qemu-sptm)",
+      "available": false,
+      "optional": false,
+      "vm_status": "BLOCKED_BY_MISSING_QEMU_FEATURE",
+      "blockers": [
+        "this QEMU has no 'darwin' machine type; the qemu-sptm fork is required",
+        "missing firmware inputs: bootkc, dtree, ramdisk.dmg, ramdisk.tc, sptm, txm",
+        "5 GiB available, 8 GiB requested"
+      ],
+      "upstream_commit": "darwin-vm edfc19433da8; qemu-sptm bad6336"
+    },
+    {
+      "name": "Corellium (optional, commercial)",
+      "available": false,
+      "optional": true,
+      "vm_status": "NOT_TESTED",
+      "blockers": [
+        "no integration in this milestone",
+        "exact model support for iPhone 15 Pro Max on iOS 27.0.1 is not documented in the public pages read"
+      ],
+      "upstream_commit": null
+    }
+  ],
+  "firmware": [
+    {
+      "name": "BuildManifest.plist",
+      "bytes": 411742,
+      "sha256": "c023bfa8dff4b299aa140699817e53f44fac4ad07cc3a19791d2c39a858021e1",
+      "format": "property list",
+      "source_build": "24A446",
+      "role": "build manifest"
+    },
+    {
+      "name": "kernelcache.release.iphone16 (raw IM4P container)",
+      "bytes": 22511975,
+      "sha256": "33606c425d5b9ebc9db16f1e7cf5197e8437c0df09ff061c9bd16596547c4d96",
+      "format": "IM4P container",
+      "source_build": "24A446",
+      "role": "kernelcache"
+    },
+    {
+      "name": "IM4P decompressed payload (LZFSE)",
+      "bytes": 73023488,
+      "sha256": "71d3232aff357cf0e26d7252230cbcbc366b1f48d902de3d7fa5c13feea6f243",
+      "format": "Mach-O fileset payload",
+      "source_build": "24A446",
+      "role": "kernelcache"
+    },
+    {
+      "name": "kernelcache analysis artifact (Mach-O MH_FILESET)",
+      "bytes": 73023488,
+      "sha256": "71d3232aff357cf0e26d7252230cbcbc366b1f48d902de3d7fa5c13feea6f243",
+      "format": "Mach-O fileset payload",
+      "source_build": "24A446",
+      "role": "kernelcache"
+    },
+    {
+      "name": "sandbox KEXT, imports resolved",
+      "bytes": 2362664,
+      "sha256": "e52d1bdf8afa8564cb37dc3c6b32dee6d0f1c8b70066d686a6be80a85d93b8ec",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "sandbox KEXT, no imports (diagnostic)",
+      "bytes": 2362664,
+      "sha256": "e52d1bdf8afa8564cb37dc3c6b32dee6d0f1c8b70066d686a6be80a85d93b8ec",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.driver.AppleMobileFileIntegrity, imports resolved",
+      "bytes": 298480,
+      "sha256": "927b8c9e437fd10d222f194f4d44ff516d5c5dda0ec6d8099bc9a41e1966086d",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.filesystems.apfs, imports resolved",
+      "bytes": 1843960,
+      "sha256": "fc7a117bb60ce7fce3fae96a31473f13464456971ca525735e11d22e263747cc",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.iokit.IOSurface, imports resolved",
+      "bytes": 314376,
+      "sha256": "718a55b6fd940bad1e73ab1c6d703f092ade418122431d7c47feda107c282c9a",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.kec.Compression, imports resolved",
+      "bytes": 65664,
+      "sha256": "b98ebf13da90960b1da1891b08ec230e969dcba57fdf5db17f89de55c9f707b8",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.kext.CoreTrust, imports resolved",
+      "bytes": 147992,
+      "sha256": "1656a9a1ccfef34b94d359849c3cfb79b558473a76e220acd2ed77699cfe49e4",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.security.AppleImage4, imports resolved",
+      "bytes": 346664,
+      "sha256": "ecf724693da68632b8c62911e48c0a98c66a10f296e1f4be753735f45d71794e",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "KEXT com.apple.security.Image4, imports resolved",
+      "bytes": 165224,
+      "sha256": "8475145f77064f66d6cf6c949fc1f19a341f1e5460bc41aa8e49a0a9ba81a93f",
+      "format": "Mach-O extracted from the kernelcache",
+      "source_build": "24A446",
+      "role": "kernel extension"
+    },
+    {
+      "name": "IPSW iPhone16,2_27.0.1_24A446_Restore.ipsw (full file)",
+      "bytes": 12359719732,
+      "sha256": "331bc7088ec5ebfee22b643b878dd0704a13e1a6fd49b376e445865b2fdfab08",
+      "format": "zip package",
+      "source_build": "24A446",
+      "role": "full firmware package"
+    }
+  ],
+  "ghidra": {
+    "ghidra_version": "12.1.2",
+    "project_name": "HOMEI_A17Pro_iOS27_0_1_24A446",
+    "project_present": true,
+    "program": "kernelcache.release.iPhone16,2",
+    "firmware_sha256": "71d3232aff357cf0e26d7252230cbcbc366b1f48d902de3d7fa5c13feea6f243",
+    "architecture": "AARCH64:LE:64:AppleSilicon",
+    "import_status": "imported and analysed, with classified log lines (see import_errors)",
+    "function_count": 230298,
+    "fileset_entries": 264,
+    "fileset_entries_covered": 264,
+    "symbol_match_basis_points": 7556,
+    "import_errors": [
+      "ghidra-analyze-kc.log: 2 x unresolved reference",
+      "ghidra-analyze-kc.log: 29 x other error",
+      "ghidra-diagnose-analysis.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.driver.AppleMobileFileIntegrity.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.driver.AppleMobileFileIntegrity.log: 1 x other error",
+      "ghidra-import-com.apple.filesystems.apfs.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.filesystems.apfs.log: 1 x other error",
+      "ghidra-import-com.apple.iokit.IOSurface.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.iokit.IOSurface.log: 1 x other error",
+      "ghidra-import-com.apple.kec.Compression.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.kec.Compression.log: 1 x other error",
+      "ghidra-import-com.apple.kext.CoreTrust.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.kext.CoreTrust.log: 1 x other error",
+      "ghidra-import-com.apple.security.AppleImage4.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.security.AppleImage4.log: 1 x other error",
+      "ghidra-import-com.apple.security.Image4.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.security.Image4.log: 1 x other error",
+      "ghidra-import-com.apple.security.sandbox.log: 2 x exception during import or analysis",
+      "ghidra-import-com.apple.security.sandbox.log: 1 x other error",
+      "ghidra-import-sandbox-noimports.log: 2 x exception during import or analysis",
+      "ghidra-import-sandbox-noimports.log: 1 x other error",
+      "ghidra-summary-com.apple.driver.AppleMobileFileIntegrity.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.filesystems.apfs.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.iokit.IOSurface.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.kec.Compression.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.kext.CoreTrust.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.security.AppleImage4.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.security.Image4.log: 1 x exception during import or analysis",
+      "ghidra-summary-com.apple.security.sandbox.log: 1 x exception during import or analysis"
+    ],
+    "last_analysis_date": "2026-11-12",
+    "source_reference": "local analysis records of the research tracker (not published)",
+    "confidence": "static observation, medium"
+  },
+  "guest": {
+    "filesystem_scope": "isolated guest overlay (not a device)",
+    "overlay_present": true,
+    "base_image_sha256": null,
+    "snapshots": 1,
+    "vm_running": false,
+    "bootstrap_version": "1",
+    "bootstrap_state": "complete",
+    "packages": [
+      {
+        "id": "homei-sample-lib",
+        "version": "1.0.0",
+        "provenance": "sample fixture signed with the public TEST-ONLY key",
+        "signature": "Valid",
+        "files": 1
+      },
+      {
+        "id": "homei-sample-tool",
+        "version": "1.0.0",
+        "provenance": "sample fixture signed with the public TEST-ONLY key",
+        "signature": "Valid",
+        "files": 1
+      }
+    ],
+    "transactions": 1
+  },
+  "fidelity": {
+    "target_id": "iphone16_2_ios27_0_1_24A446",
+    "firmware_identity": "EXACT_REFERENCE_MATCH",
+    "firmware": "UNVERIFIED",
+    "hardware": "UNVERIFIED",
+    "functional": {
+      "bluetooth": "UNSUPPORTED",
+      "graphics": "UNSUPPORTED",
+      "guest_boot": "NOT_TESTED",
+      "kernel_research": "NOT_TESTED",
+      "serial_console": "NOT_TESTED",
+      "springboard": "UNSUPPORTED",
+      "wifi": "UNSUPPORTED"
+    },
+    "vm_status": "BLOCKED_BY_MISSING_QEMU_FEATURE",
+    "hardware_fidelity": "UNVERIFIED",
+    "notes": [
+      "This is not an exact target virtual machine.",
+      "Guest root is not physical device root."
+    ]
+  },
+  "experiments": [
+    {
+      "experiment_id": "exp-0001",
+      "kind": "feasibility-preflight",
+      "target": {
+        "target_id": "iphone16_2_ios27_0_1_24A446",
+        "product_type": "iPhone16,2",
+        "soc": "Apple A17 Pro",
+        "board": "D84AP",
+        "build_version": "24A446"
+      },
+      "backend": {
+        "name": "darwin-vm (qemu-sptm) preflight",
+        "kind": "none",
+        "version": "11.1.3",
+        "qemu_version": "11.1.3"
+      },
+      "guest_os_build": null,
+      "firmware_artifacts": [],
+      "config_sha256": "9b353a539485da02ecb53e91e78a440d4c2e47acca698f1cf8984ff92e62d107",
+      "snapshot_id": null,
+      "inputs": [
+        "host environment"
+      ],
+      "timestamp": "2026-11-13T23:57:34Z",
+      "status": "COMPLETED",
+      "boot_outcome": null,
+      "result": "can_launch=false; darwin_machine_available=false; blockers: this QEMU has no 'darwin' machine type; the qemu-sptm fork is required | missing firmware inputs: bootkc, dtree, ramdisk.dmg, ramdisk.tc, sptm, txm | 5 GiB available, 8 GiB requested",
+      "log_refs": [
+        {
+          "name": "logs/exp-0001-preflight.json",
+          "sha256": "8f20c19025739d434eae9f90350021d7e2aa8204269be9c8b0527937ecda53d1"
+        }
+      ],
+      "limitations": [
+        "The preflight starts no virtual machine. It says what is missing, not whether a guest would boot."
+      ],
+      "reproducible": null
+    },
+    {
+      "experiment_id": "exp-0002",
+      "kind": "guest-workspace-lifecycle",
+      "target": {
+        "target_id": "iphone16_2_ios27_0_1_24A446",
+        "product_type": "iPhone16,2",
+        "soc": "Apple A17 Pro",
+        "board": "D84AP",
+        "build_version": "24A446"
+      },
+      "backend": {
+        "name": "host workspace (no virtual machine)",
+        "kind": "none",
+        "version": null,
+        "qemu_version": null
+      },
+      "guest_os_build": null,
+      "firmware_artifacts": [
+        {
+          "name": "sample repository index",
+          "sha256": "5ce7d51fffd50793bd9a2b1d4bf26f606db6b1e2c6be90f1106d827e38188fcc"
+        }
+      ],
+      "config_sha256": "b741798c97d7658e09a5315b0efd1be477464d71e09d8e2d9969a246c23b2efa",
+      "snapshot_id": null,
+      "inputs": [
+        "sample fixture packages"
+      ],
+      "timestamp": "2026-11-13T23:57:34Z",
+      "status": "COMPLETED",
+      "boot_outcome": null,
+      "result": "bootstrap Fresh; repeat run Unchanged; installed 2 packages (dependency first); removed 1; snapshot snap-0001 restored to tree 3ff0a59eac2c5015; installed files verified",
+      "log_refs": [],
+      "limitations": [
+        "Runs in a host-side guest workspace overlay. No virtual machine was started and no Darwin guest exists here.",
+        "The packages are inert fixtures signed with a public test key. They are not research tools."
+      ],
+      "reproducible": null
+    }
+  ],
+  "correlations": [],
+  "evidence": [
+    {
+      "id": "EV-LAB-001",
+      "category": "Feasibility report",
+      "title": "Exact target feasibility",
+      "reference": "Docs/EXACT_TARGET_FEASIBILITY.md",
+      "limitation": "Read-only investigation of public sources and this host on 2026-11-14. Nothing was booted."
+    },
+    {
+      "id": "EV-LAB-002",
+      "category": "Target manifest",
+      "title": "Canonical iPhone16,2 / 27.0.1 / 24A446 reference",
+      "reference": "Research/Targets/iPhone16,2-iOS27.0.1.json",
+      "limitation": "Reference metadata. It is not evidence that a VM booted."
+    },
+    {
+      "id": "EV-LAB-003",
+      "category": "Firmware manifest",
+      "title": "BuildManifest.plist of the 24A446 package",
+      "reference": "tracker source S-043",
+      "limitation": "Primary Apple artifact. A hash shows identity with the recorded file, not authenticity."
+    },
+    {
+      "id": "EV-LAB-004",
+      "category": "Public source",
+      "title": "darwin-vm README, tested configurations and limits",
+      "reference": "https://github.com/jprx/darwin-vm",
+      "limitation": "The A17 Pro is not in the tested table. The tested iOS 27.0 build is 24A437."
+    },
+    {
+      "id": "EV-LAB-005",
+      "category": "Public source",
+      "title": "qemu-sptm darwin machine source",
+      "reference": "https://github.com/jprx/qemu-sptm",
+      "limitation": "Pinned commit. The default CPU is the generic max model."
+    },
+    {
+      "id": "EV-LAB-006",
+      "category": "Public source",
+      "title": "Corellium release notes and iOS device page",
+      "reference": "https://support.corellium.com/releases",
+      "limitation": "OS support is listed. Exact-model support for the target is not documented in the pages read."
+    },
+    {
+      "id": "EV-LAB-007",
+      "category": "Static analysis",
+      "title": "Existing Ghidra project for the target kernelcache",
+      "reference": "tracker reports/ghidra-*.md",
+      "limitation": "Static observation only. Ghidra function names are not vulnerability claims."
+    }
+  ],
+  "unresolved": [
+    "No exact A17 Pro / 24A446 guest has been booted.",
+    "Hardware fidelity is unverified: darwin-vm uses a generic machine and QEMU's generic max CPU.",
+    "The CPU name t8130 is a secondary-source label and the monitor image is named t8122 (tracker claim C-159).",
+    "The unmodified darwin-vm preparation script does not find an SPTM image for this device (sptm.t8130 is absent, sptm.t8122 is present).",
+    "Preparing a bootable ramdisk needs macOS. This host is Linux.",
+    "Exact-model support for iPhone 15 Pro Max on iOS 27.0.1 is not documented for Corellium.",
+    "Preflight: this QEMU has no 'darwin' machine type; the qemu-sptm fork is required",
+    "Preflight: missing firmware inputs: bootkc, dtree, ramdisk.dmg, ramdisk.tc, sptm, txm",
+    "Preflight: 5 GiB available, 8 GiB requested",
+    "No guest boot has been attempted, so every functional feature is NOT_TESTED or UNSUPPORTED."
+  ]
+}

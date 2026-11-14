@@ -1,0 +1,22 @@
+[package]
+name = "homei-lab"
+description = "HOMEI virtual research lab host controller: VM backend adapter, guest workspace, package manager, experiments."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "homei-lab"
+path = "src/bin/homei-lab.rs"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+homei-core.workspace = true
+sha2.workspace = true
+ed25519-dalek.workspace = true
+
+[lints]
+workspace = true

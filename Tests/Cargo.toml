@@ -11,6 +11,8 @@ publish.workspace = true
 homei-core.workspace = true
 homei-catalog.workspace = true
 homei-bootstrap.workspace = true
+homei-lab.workspace = true
+ed25519-dalek.workspace = true
 serde_json.workspace = true
 serde.workspace = true
 
@@ -45,6 +47,46 @@ path = "FixtureTests/bundle.rs"
 [[test]]
 name = "fixture_catalog_bootstrap"
 path = "FixtureTests/catalog_bootstrap.rs"
+
+[[test]]
+name = "lab_target_manifest"
+path = "LabTests/target_manifest.rs"
+
+[[test]]
+name = "lab_fidelity"
+path = "LabTests/fidelity.rs"
+
+[[test]]
+name = "lab_vm_backend"
+path = "LabTests/vm_backend.rs"
+
+[[test]]
+name = "lab_storage"
+path = "LabTests/storage.rs"
+
+[[test]]
+name = "lab_packages"
+path = "LabTests/packages.rs"
+
+[[test]]
+name = "lab_bootstrap"
+path = "LabTests/bootstrap.rs"
+
+[[test]]
+name = "lab_experiments"
+path = "LabTests/experiments.rs"
+
+[[test]]
+name = "lab_firmware_ghidra"
+path = "LabTests/firmware_ghidra.rs"
+
+[[test]]
+name = "lab_hygiene"
+path = "LabTests/hygiene.rs"
+
+[[test]]
+name = "lab_state"
+path = "LabTests/state.rs"
 
 [lints]
 workspace = true

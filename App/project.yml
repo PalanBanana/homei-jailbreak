@@ -22,7 +22,7 @@ targets:
       - path: Components
       - path: Resources
         excludes: ["Branding/**", "*.entitlements"]
-      # Bundled data. HomeiKit reads these four files plus the catalog from the app bundle.
+      # Bundled data. HomeiKit reads these four files, the catalog and the lab state from the app bundle.
       - path: ../Data/evidence.json
         buildPhase: resources
       - path: ../Data/compatibility.json
@@ -33,12 +33,15 @@ targets:
         buildPhase: resources
       - path: ../Catalog/Packages/catalog.json
         buildPhase: resources
+      # Sanitized lab state exported by the host controller (Data/lab/lab-state.json). Read only.
+      - path: ../Data/lab/lab-state.json
+        buildPhase: resources
     dependencies:
       - package: HomeiKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.homei
-        MARKETING_VERSION: "0.2.0"
+        MARKETING_VERSION: "0.3.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"

@@ -40,8 +40,10 @@ Three languages exist because a real iOS app needs Swift, a verifiable core need
 | `Core/` | `homei-core`: `device_profile`, `evidence`, `compatibility`, `research`, `safety`, `diagnostics`, `recovery`, `data` |
 | `Catalog/` | `homei-catalog` plus `Packages/`, `Sources/`, `Schemas/` |
 | `Bootstrap/` | `homei-bootstrap` (`models`, `planning`, `simulation`) plus `Models/` data and schema |
+| `Lab/` | `homei-lab` (v0.3.0): the host controller library and binary: `guard`, `process`, `host`, `backend`, `storage`, `packages`, `bootstrap`, `experiments`, `firmware`, `ghidra`, `state` |
+| `Research/Targets/` | the canonical target manifest |
 | `Tools/homei-cli/` | `homei`: a host command line view of the core |
-| `Data/` | `evidence.json`, `compatibility.json`, `research-index.json`, `device-fixtures.json`, `schemas/` |
+| `Data/` | `evidence.json`, `compatibility.json`, `research-index.json`, `device-fixtures.json`, `lab/lab-state.json`, `schemas/` |
 | `App/` | SwiftUI sources, `Sources/Kit` (HomeiKit), resources, `project.yml` |
 | `Tests/` | Rust suites by theme, plus `SwiftTests/` |
 | `scripts/` | `validate_data.py` |
@@ -72,4 +74,14 @@ A closed allow-list of six read-only in-app operations. Every other operation, i
 
 ## Dependency direction
 
-`Core` depends on nothing in the workspace. `Catalog` and `Bootstrap` depend on `Core`. The CLI and the tests depend on all three. The app depends on HomeiKit only.
+`Core` depends on nothing in the workspace. `Catalog` and `Bootstrap` depend on `Core`. The CLI depends on those three. `Lab` depends on `Core` only. The tests depend on all of them. The app depends on HomeiKit only.
+
+## Virtual research lab (v0.3.0)
+
+Two halves with a one-way data flow.
+
+- **Portable layer** (`Core/src/{target,fidelity,experiment,labstate}.rs`, no filesystem, no process, no network): the target manifest, the VM status classifier, the fidelity report, experiment records, comparison and correlation, and the `LabState` snapshot type with strict decoding.
+- **Host controller** (`Lab/`): the only crate that may write files or start a process. It writes through `GuestRoot`, a path guard that accepts only relative, plain paths and no symbolic link. It starts only `qemu-system-aarch64` and `qemu-img`, never through a shell and never with `sudo`. It depends on `sha2` and `ed25519-dalek`, and hygiene tests pin that list.
+- **App** (`App/Sources/Kit/Lab.swift`, `App/Views/LabViews.swift`): reads the exported `lab-state.json`, decodes it strictly (an unknown key is an error, as in Rust) and shows ten read-only screens. It cannot start a guest.
+
+The host controller exports `Data/lab/lab-state.json` after validating it. See `Docs/VIRTUAL_RESEARCH_LAB.md`.

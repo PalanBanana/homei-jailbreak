@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HOMEI research target manifest",
+  "description": "Reference metadata for the fixed target. It cannot carry a boot status.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "target_id",
+    "commercial_model",
+    "product_type",
+    "soc",
+    "cpu",
+    "board",
+    "cpid",
+    "bdid",
+    "architecture",
+    "os_version",
+    "build_version",
+    "vm_status",
+    "hardware_fidelity",
+    "provenance",
+    "discrepancies",
+    "checked_on"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "commercial_model": {
+      "const": "iPhone 15 Pro Max"
+    },
+    "product_type": {
+      "const": "iPhone16,2"
+    },
+    "soc": {
+      "const": "Apple A17 Pro"
+    },
+    "cpu": {
+      "const": "t8130"
+    },
+    "board": {
+      "const": "D84AP"
+    },
+    "cpid": {
+      "const": "0x8130"
+    },
+    "bdid": {
+      "const": "0x06"
+    },
+    "architecture": {
+      "const": "arm64e"
+    },
+    "os_version": {
+      "const": "27.0.1"
+    },
+    "build_version": {
+      "const": "24A446"
+    },
+    "vm_status": {
+      "enum": [
+        "NOT_TESTED",
+        "REFERENCE_DEVICE_ONLY"
+      ]
+    },
+    "hardware_fidelity": {
+      "enum": [
+        "EXACT",
+        "PARTIAL",
+        "APPROXIMATE",
+        "UNSUPPORTED",
+        "UNVERIFIED"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "kind",
+          "confidence",
+          "tracker_claim_ids",
+          "note"
+        ],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "primary",
+              "secondary",
+              "reference"
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "verified",
+              "partially_verified",
+              "unverified"
+            ]
+          },
+          "tracker_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "minProperties": 10
+    },
+    "discrepancies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "summary",
+          "tracker_claim_ids"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "tracker_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "checked_on": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    }
+  }
+}

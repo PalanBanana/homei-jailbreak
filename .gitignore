@@ -37,6 +37,24 @@ backups/
 *.gpr
 *.rep/
 
+# Virtual research lab. Firmware, guest disks, snapshots, memory dumps and local workspaces are local only.
+firmware/
+ghidra-projects/
+lab-workspace/
+*.dmg
+*.qcow2
+*.img
+*.raw
+*.vmem
+*.vmss
+*.core
+*.trustcache
+*.tc
+*.bootkc
+dtree
+*.dtb
+*.hpk.local
+
 # Editor and OS
 .DS_Store
 .idea/
