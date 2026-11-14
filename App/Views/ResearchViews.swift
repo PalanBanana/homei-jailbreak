@@ -267,9 +267,15 @@ struct ResearchKernelcacheView: View {
                 }
                 SectionCard(titleKey: "research.kernelcache.filesets") {
                     InfoRow(labelKey: "research.kernelcache.fileset_count", value: "\(k.filesetEntryCount)")
-                    ForEach(k.filesetEntries, id: \.self) { entry in
-                        Text(verbatim: entry).font(.footnote).foregroundStyle(Theme.textSecondary)
+                    DisclosureGroup {
+                        ForEach(k.filesetEntries, id: \.self) { entry in
+                            Text(verbatim: entry).font(.footnote).foregroundStyle(Theme.textSecondary)
+                        }
+                    } label: {
+                        Text(LocalizedStringKey("research.kernelcache.show_filesets"))
+                            .font(.subheadline).foregroundStyle(Theme.textPrimary)
                     }
+                    .frame(minHeight: 44)
                 }
             } else {
                 ResearchMissingCard(titleKey: "research.kernelcache.title")

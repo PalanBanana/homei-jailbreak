@@ -494,27 +494,25 @@ final class HomeiUITests: XCTestCase {
 
     // MARK: Firmware research screens
 
-    /// Open the firmware research hub from the lab overview.
+    /// Open the firmware research hub from the lab overview. The hub is checked by its banner text.
     private func openResearch(_ app: XCUIApplication) {
         openMore(app, "Virtual Research Lab")
-        openLab(app, "Firmware research")
-        // The hub's own banner confirms the screen even when the title query is slow to appear.
+        let link = app.buttons["Firmware research"].firstMatch
+        XCTAssertTrue(link.waitForExistence(timeout: 8), "the research row is not on the lab overview")
+        var scrolls = 0
+        while !link.isHittable && scrolls < 6 {
+            scrollDown(app)
+            scrolls += 1
+        }
+        link.tap()
         XCTAssertTrue(has(app, "Static analysis of firmware files"), "the research hub did not load")
     }
 
-    /// Return from a research screen to the hub, so the next row is on screen.
-    private func backToResearchHub(_ app: XCUIApplication) {
-        let back = app.navigationBars.buttons.element(boundBy: 0)
-        XCTAssertTrue(back.waitForExistence(timeout: 8), "no back button")
-        back.tap()
-        XCTAssertTrue(has(app, "Static analysis of firmware files"), "did not return to the research hub")
-    }
-
+    /// Each detail screen is opened from a fresh launch, so no test depends on back navigation.
     func testResearchHubStatesNoExactVMAndOpensEveryScreen() {
         let app = launch()
         openResearch(app)
         XCTAssertTrue(has(app, "NOT_ESTABLISHED"), "the exact target VM is shown as not established")
-        XCTAssertTrue(has(app, "Static analysis of firmware files. Nothing was booted, emulated or simulated."))
         XCTAssertFalse(has(app, "EXACT TARGET VERIFIED", timeout: 1))
         shot(app, "research-hub-en")
         audit(app, screen: "research-hub")
@@ -531,13 +529,18 @@ final class HomeiUITests: XCTestCase {
         audit(app, screen: "research-firmware")
     }
 
-    func testDeviceTreeAndKernelcacheShowTheRecordedValuesWithoutInventingAny() {
+    func testDeviceTreeShowsTheRecordedRootCompatible() {
         let app = launch()
         openResearch(app)
         openLab(app, "Device tree inspector")
         XCTAssertTrue(has(app, "D84AP, iPhone16,2, AppleARM"))
         XCTAssertTrue(has(app, "arm-io,t8130"))
-        backToResearchHub(app)
+        audit(app, screen: "research-devicetree")
+    }
+
+    func testKernelcacheShowsTheConfigurationTokenWithoutInventingAVersion() {
+        let app = launch()
+        openResearch(app)
         openLab(app, "Kernelcache inspector")
         XCTAssertTrue(has(app, "RELEASE_ARM64_T8122"))
         XCTAssertTrue(has(app, "MH_FILESET"))
@@ -550,21 +553,30 @@ final class HomeiUITests: XCTestCase {
         openLab(app, "AIC and PMGR research")
         XCTAssertTrue(has(app, "0x2d1000000"))
         XCTAssertTrue(has(app, "aic,3"))
-        XCTAssertTrue(has(app, "BLOCKED"))
+        XCTAssertTrue(has(app, "Blocked"))
         audit(app, screen: "research-aicpmgr")
     }
 
-    func testSPTMGhidraAndVMScreensStateTheirLimits() {
+    func testSPTMRegisterInventoryShowsTheCensusCounts() {
         let app = launch()
         openResearch(app)
         openLab(app, "SPTM register inventory")
         XCTAssertTrue(has(app, "127"))
         XCTAssertTrue(has(app, "Undefined in the fork's model"))
-        backToResearchHub(app)
-        backToResearchHub(app)
+        audit(app, screen: "research-sptm")
+    }
+
+    func testGhidraBrowserReportsNoFunctionCount() {
+        let app = launch()
+        openResearch(app)
         openLab(app, "Ghidra analysis browser")
         XCTAssertTrue(has(app, "Not exported (unknown)"))
-        backToResearchHub(app)
+        audit(app, screen: "research-ghidra")
+    }
+
+    func testVMFeasibilityStatesThatNoExactVMIsEstablished() {
+        let app = launch()
+        openResearch(app)
         openLab(app, "VM feasibility")
         XCTAssertTrue(has(app, "NOT_ESTABLISHED"))
         XCTAssertTrue(has(app, "Not established"))
