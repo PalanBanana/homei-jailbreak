@@ -434,3 +434,4 @@
 "research.identity.board_config" = "보드 구성";
 "research.identity.chip_id" = "칩 ID";
 "research.identity.board_id" = "보드 ID";
+"research.aicpmgr.domains_spoken" = "%lld개의 전원 도메인 이름";

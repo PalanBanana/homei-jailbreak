@@ -173,23 +173,27 @@ struct ResearchFirmwareView: View {
             }
             SectionCard(titleKey: "research.firmware.components") {
                 ForEach(catalog.analysis.components) { c in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: c.name).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.textPrimary)
-                        ResearchBadge(textKey: c.availability.localizationKey,
-                                      color: ResearchText.color(c.availability),
-                                      symbol: ResearchText.symbol(c.availability))
-                        if let k = c.container?.fourcc {
-                            InfoRow(labelKey: "research.firmware.fourcc", value: k)
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let k = c.container?.fourcc {
+                                InfoRow(labelKey: "research.firmware.fourcc", value: k)
+                            }
+                            if let sha = c.localSha256 {
+                                InfoRow(labelKey: "research.firmware.sha256", value: ResearchText.short(sha))
+                            }
+                            if let d = c.manifestDigestMatches {
+                                InfoRow(labelKey: "research.firmware.digest_matches", value: ResearchText.yesNo(d))
+                            }
                         }
-                        if let sha = c.localSha256 {
-                            InfoRow(labelKey: "research.firmware.sha256", value: ResearchText.short(sha))
-                        }
-                        if let d = c.manifestDigestMatches {
-                            InfoRow(labelKey: "research.firmware.digest_matches", value: ResearchText.yesNo(d))
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(verbatim: c.name).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.textPrimary)
+                            ResearchBadge(textKey: c.availability.localizationKey,
+                                          color: ResearchText.color(c.availability),
+                                          symbol: ResearchText.symbol(c.availability))
                         }
                     }
-                    .padding(.vertical, 6)
-                    .accessibilityElement(children: .combine)
+                    .frame(minHeight: 44)
                 }
             }
             SectionCard(titleKey: "research.firmware.provenance") {
@@ -354,6 +358,7 @@ struct ResearchAICPMGRView: View {
                         InfoRow(labelKey: "research.aicpmgr.windows", value: "\(pmgr.regWindows)")
                         InfoRow(labelKey: "research.aicpmgr.domains", value: "\(pmgr.powerDomainNames.count)")
                         LabNote(text: pmgr.powerDomainNames.joined(separator: ", "))
+                            .accessibilityLabel(Text(String(format: String(localized: "research.aicpmgr.domains_spoken"), pmgr.powerDomainNames.count)))
                     }
                 }
                 SectionCard(titleKey: "research.aicpmgr.verdicts") {
@@ -482,17 +487,20 @@ struct ResearchEvidenceView: View {
             }
             SectionCard(titleKey: "research.evidence.decisions") {
                 ForEach(catalog.matrix.components, id: \.id) { c in
-                    ForEach(Array(c.decisions.enumerated()), id: \.offset) { _, d in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(verbatim: "[\(d.confidence.tag)] \(c.title)")
-                                .font(.footnote.monospaced()).foregroundStyle(Theme.accent)
-                            Text(verbatim: d.statement).font(.subheadline).foregroundStyle(Theme.textPrimary)
-                            LabNote(text: String(localized: "research.evidence.source") + ": " + d.source + " · " + d.evidenceType)
-                            LabNote(text: String(localized: "research.evidence.limitation") + ": " + d.limitation)
+                    DisclosureGroup {
+                        ForEach(Array(c.decisions.enumerated()), id: \.offset) { _, d in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(verbatim: "[\(d.confidence.tag)] \(d.statement)")
+                                    .font(.subheadline).foregroundStyle(Theme.textPrimary)
+                                LabNote(text: String(localized: "research.evidence.source") + ": " + d.source + " · " + d.evidenceType)
+                                LabNote(text: String(localized: "research.evidence.limitation") + ": " + d.limitation)
+                            }
+                            .padding(.vertical, 6)
                         }
-                        .padding(.vertical, 6)
-                        .accessibilityElement(children: .combine)
+                    } label: {
+                        Text(verbatim: c.title).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.textPrimary)
                     }
+                    .frame(minHeight: 44)
                 }
             }
         }
