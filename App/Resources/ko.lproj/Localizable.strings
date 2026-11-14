@@ -435,3 +435,4 @@
 "research.identity.chip_id" = "칩 ID";
 "research.identity.board_id" = "보드 ID";
 "research.aicpmgr.domains_spoken" = "%lld개의 전원 도메인 이름";
+"research.aicpmgr.cells_value" = "인터럽트 셀 %lld개";

@@ -498,6 +498,16 @@ final class HomeiUITests: XCTestCase {
     private func openResearch(_ app: XCUIApplication) {
         openMore(app, "Virtual Research Lab")
         openLab(app, "Firmware research")
+        // The hub's own banner confirms the screen even when the title query is slow to appear.
+        XCTAssertTrue(has(app, "Static analysis of firmware files"), "the research hub did not load")
+    }
+
+    /// Return from a research screen to the hub, so the next row is on screen.
+    private func backToResearchHub(_ app: XCUIApplication) {
+        let back = app.navigationBars.buttons.element(boundBy: 0)
+        XCTAssertTrue(back.waitForExistence(timeout: 8), "no back button")
+        back.tap()
+        XCTAssertTrue(has(app, "Static analysis of firmware files"), "did not return to the research hub")
     }
 
     func testResearchHubStatesNoExactVMAndOpensEveryScreen() {
@@ -527,6 +537,7 @@ final class HomeiUITests: XCTestCase {
         openLab(app, "Device tree inspector")
         XCTAssertTrue(has(app, "D84AP, iPhone16,2, AppleARM"))
         XCTAssertTrue(has(app, "arm-io,t8130"))
+        backToResearchHub(app)
         openLab(app, "Kernelcache inspector")
         XCTAssertTrue(has(app, "RELEASE_ARM64_T8122"))
         XCTAssertTrue(has(app, "MH_FILESET"))
@@ -549,8 +560,11 @@ final class HomeiUITests: XCTestCase {
         openLab(app, "SPTM register inventory")
         XCTAssertTrue(has(app, "127"))
         XCTAssertTrue(has(app, "Undefined in the fork's model"))
+        backToResearchHub(app)
+        backToResearchHub(app)
         openLab(app, "Ghidra analysis browser")
         XCTAssertTrue(has(app, "Not exported (unknown)"))
+        backToResearchHub(app)
         openLab(app, "VM feasibility")
         XCTAssertTrue(has(app, "NOT_ESTABLISHED"))
         XCTAssertTrue(has(app, "Not established"))

@@ -343,7 +343,7 @@ struct ResearchAICPMGRView: View {
             if let dt = catalog.analysis.devicetree, let aic = dt.aic {
                 SectionCard(titleKey: "research.aicpmgr.aic") {
                     InfoRow(labelKey: "research.devicetree.compatible", value: aic.compatible.joined(separator: ", "))
-                    InfoRow(labelKey: "research.aicpmgr.cells", value: aic.interruptCells.map { "\($0)" } ?? "-")
+                    InfoRow(labelKey: "research.aicpmgr.cells", value: aic.interruptCells.map { String(format: String(localized: "research.aicpmgr.cells_value"), $0) } ?? "-")
                     ForEach(Array(aic.reg.enumerated()), id: \.offset) { _, r in
                         InfoRow(labelKey: "research.aicpmgr.reg", value: "\(r.addressHex) · \(r.sizeHex)")
                     }

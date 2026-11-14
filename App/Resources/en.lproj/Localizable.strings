@@ -435,3 +435,4 @@
 "research.identity.chip_id" = "Chip ID";
 "research.identity.board_id" = "Board ID";
 "research.aicpmgr.domains_spoken" = "%lld power-domain names";
+"research.aicpmgr.cells_value" = "%lld interrupt cell(s)";
